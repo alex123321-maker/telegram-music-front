@@ -3,9 +3,7 @@ import { computed } from 'vue';
 import { routes } from '@/router';
 import AppPage from '@/components/AppPage.vue';
 import AppLink from '@/components/AppLink.vue';
-import WebApp from '@twa-dev/sdk';
 
-WebApp.ready();
 
 const nonIndexRoutes = computed(() => routes.filter((r) => !!r.meta?.title));
 </script>
