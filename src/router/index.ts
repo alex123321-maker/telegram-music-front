@@ -5,8 +5,17 @@ import ThemeParamsPage from '@/pages/ThemeParamsPage.vue';
 import LaunchParamsPage from '@/pages/LaunchParamsPage.vue';
 import TonConnectPage from '@/pages/TonConnectPage.vue';
 import IconTonConnect from '@/components/IconTonConnect.vue';
+import MainPage from '@/pages/MainPage.vue';
 
 export const routes = [
+  {
+    path: '/main',
+    name: 'main',
+    component: MainPage,
+    meta:{
+    title: 'MAIN PAGE',
+    },
+  },
   {
     path: '/',
     name: 'index',
