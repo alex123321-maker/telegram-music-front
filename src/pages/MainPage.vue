@@ -10,7 +10,7 @@
     />
 
     <button
-      @click="embedVideo"
+      @click="resolveVideo"
       class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
     >
       Смотреть
@@ -32,26 +32,34 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import axios from 'axios'
 
 const youtubeUrl = ref<string>('')
 const embedUrl = ref<string>('')
 const error = ref<string>('')
 
-function extractVideoId(url: string): string | null {
-  const regex =
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-  const match = url.match(regex)
-  return match ? match[1] : null
-}
-
-function embedVideo(): void {
+async function resolveVideo() {
   error.value = ''
-  const id = extractVideoId(youtubeUrl.value)
-  if (id) {
-    embedUrl.value = `https://www.youtube.com/embed/${id}?rel=0`
-  } else {
-    embedUrl.value = ''
-    error.value = 'Неверная ссылка на YouTube'
+  embedUrl.value = ''
+
+  if (!youtubeUrl.value) {
+    error.value = 'Введите ссылку на видео'
+    return
+  }
+
+  try {
+    const response = await axios.post('https://mandrikov-ad.ru:3000/api/resolve', {
+      url: youtubeUrl.value
+    },{ timeout: 30000 } )
+
+    if (response.data?.embed_url) {
+      embedUrl.value = response.data.embed_url
+    } else {
+      error.value = 'Не удалось получить ссылку на видео'
+    }
+  } catch (err) {
+    error.value = 'Ошибка при загрузке видео'
+    console.error(err)
   }
 }
 </script>
