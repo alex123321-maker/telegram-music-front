@@ -34,6 +34,7 @@ if (import.meta.env.DEV) {
                     allows_write_to_pm: true,
                 })],
                 ['hash', '89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31'],
+                ['signature', '89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31'],
                 ['auth_date', '1716922846'],
                 ['start_param', 'debug'],
                 ['chat_type', 'sender'],
