@@ -35,8 +35,8 @@ export const mockResolveMedia = async (
       source_id: "Nc7pLmCdWgY",
       source_type: "youtube",
       title: "ДЖЕМСАЙД ПРО ГЕРОЕВ В ДЕДЛОК ",
-      description: "DAD LUCK",
-      artist: "#deadlock #дедлок #deadlockmoments\nНА РАЗВИТИЕ КАНАЛА - https://www.donationalerts.com/r/dadluck\nПрисылайте клипы сюда - clck.ru/3CuoGi\nДЖЕМСАЙД ПРО ГЕРОЕВ В ДЕДЛОК",
+      artist: "DAD LUCK",
+      description: "#deadlock #дедлок #deadlockmoments\nНА РАЗВИТИЕ КАНАЛА - https://www.donationalerts.com/r/dadluck\nПрисылайте клипы сюда - clck.ru/3CuoGi\nДЖЕМСАЙД ПРО ГЕРОЕВ В ДЕДЛОК",
       duration: 415,
       thumbnail_url:
         "https://i.ytimg.com/vi/Nc7pLmCdWgY/maxresdefault.jpg",
