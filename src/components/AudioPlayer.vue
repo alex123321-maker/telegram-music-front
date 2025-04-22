@@ -3,11 +3,14 @@
 
     <div
       ref="progressBar"
-      class="h-1 bg-gray-300 cursor-pointer"
+      class="h-2 bg-gray-300 cursor-pointer"
       @mousedown.prevent="startSeek"
       @touchstart.prevent="startSeek"
     >
-      <div class="h-full bg-blue-600" :style="{ width: progress + '%' }"></div>
+    <div
+        class="h-full bg-blue-600"
+        :style="{ width: progress + '%' }"
+      />
       <div
         v-if="isDragging"
         class="absolute -top-6 text-xs text-gray-700 whitespace-nowrap transform -translate-x-1/2"
@@ -25,12 +28,12 @@
           </svg>
         </button>
         <button
-          @click="togglePlay"
-          :class="[
-            'p-2 rounded-full transition',
-            isPlaying ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'
-          ]"
-        >
+            @click="togglePlay"
+            :class="[
+              'p-2 rounded-full transition duration-300 ease-in-out transform',
+              isPlaying ? 'bg-blue-600 text-white scale-110' : 'bg-gray-200 text-gray-800 scale-100'
+            ]"
+          >
           <svg v-if="!isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
@@ -79,7 +82,7 @@
           @input="onVolumeChange"
           @touchstart.stop
           @touchmove.prevent="onVolumeTouchMove"
-          class="absolute bottom-full mb-8 left-1/2 transform -translate-x-1/2 -rotate-90 w-24 h-2 appearance-none"
+          class="absolute bottom-full mb-8 left-1/2 transform -translate-x-1/2 -rotate-90 w-24 h-2 appearance-none transition-all duration-300 opacity-100 scale-100"
           :style="{ background: volumeBackground }"
         />
       </div>
@@ -181,6 +184,7 @@ function progressLoop(): void {
 
 function startSeek(e: MouseEvent | TouchEvent): void {
   isDragging.value = true
+  cancelAnimationFrame(rafId) // Останавливаем автообновление
   seek(e)
   window.addEventListener('mousemove', seek)
   window.addEventListener('mouseup', endSeek)
@@ -213,8 +217,12 @@ function endSeek(): void {
   window.removeEventListener('mouseup', endSeek)
   window.removeEventListener('touchmove', seek)
   window.removeEventListener('touchend', endSeek)
+
   const d = sound.duration() || 0
   if (d) sound.seek(d * dragPercent.value)
+
+  // Возобновляем обновление прогресса
+  rafId = requestAnimationFrame(progressLoop)
 }
 
 function handleClickOutside(event: MouseEvent) {
