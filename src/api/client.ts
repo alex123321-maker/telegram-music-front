@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const apiClient = axios.create({
   baseURL: 'https://mandrikov-ad.ru:3000/api',
-  timeout: 100000, // 10 секунд
+  timeout: 100*1000, // 100 секунд
   headers: {
     'Content-Type': 'application/json',
   },

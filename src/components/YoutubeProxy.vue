@@ -51,11 +51,11 @@ async function resolveVideo() {
   try {
     const data = await resolveYouTubeVideo(youtubeUrl.value)
 
-    if (data?.audio_url) {
-      audioUrl.value = data.audio_url
-      artist.value = data.artist ?? 'Нет артиста'
-      title.value = data.title
-      cover.value = data.thumbnail_url ?? 'https://mir-s3-cdn-cf.behance.net/project_modules/1400/073c9f95753035.5e9efb0182827.jpg'
+    if (data?.URL) {
+      audioUrl.value = data.URL
+      artist.value = data.Artist ?? 'Нет артиста'
+      title.value = data.Title
+      cover.value = data.ThumbnailURL ?? 'https://mir-s3-cdn-cf.behance.net/project_modules/1400/073c9f95753035.5e9efb0182827.jpg'
     } else {
       error.value = 'Не удалось получить ссылку на аудио'
     }
