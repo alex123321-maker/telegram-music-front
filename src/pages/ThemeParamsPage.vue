@@ -6,7 +6,6 @@ import AppLink from '@/components/AppLink.vue';
 import AppPage from '@/components/AppPage.vue';
 
 const tp = useSignal(themeParams.state);
-
 const rows = computed<DisplayDataRow[]>(() => Object
     .entries(tp.value)
     .map(([title, value]) => ({

@@ -42,21 +42,23 @@ if (import.meta.env.DEV) {
             ]).toString();
 
             lp = {
-                themeParams: {
-                    accentTextColor: '#6ab2f2',
-                    bgColor: '#17212b',
-                    buttonColor: '#5288c1',
-                    buttonTextColor: '#ffffff',
-                    destructiveTextColor: '#ec3942',
-                    headerBgColor: '#17212b',
-                    hintColor: '#708499',
-                    linkColor: '#6ab3f3',
-                    secondaryBgColor: '#232e3c',
-                    sectionBgColor: '#17212b',
-                    sectionHeaderTextColor: '#6ab3f3',
-                    subtitleTextColor: '#708499',
-                    textColor: '#f5f5f5',
-                },
+              themeParams:{
+                accentTextColor:        '#6ab2f2', // Акцентный цвет текста
+                bgColor:                '#17212b', // Основной фон
+                buttonColor:            '#5288c1', // Фон главных кнопок
+                buttonTextColor:        '#ffffff', // Текст главных кнопок
+                destructiveTextColor:   '#ec3942', // Текст «деструктивных» действий
+                headerBgColor:          '#17212b', // Фон заголовка
+                hintColor:              '#708499', // Цвет «подсказок» и disabled
+                linkColor:              '#6ab3f3', // Цвет ссылок
+                secondaryBgColor:       '#232e3c', // Фон второстепенных элементов
+                sectionBgColor:         '#17212b', // Фон секций
+                sectionHeaderTextColor: '#6ab3f3', // Цвет заголовков секций
+                sectionSeparatorColor:  '#2e3a4a', // Цвет разделителей секций
+                subtitleTextColor:      '#708499', // Цвет подзаголовков
+                textColor:              '#f5f5f5', // Основной цвет текста
+                bottom_bar_bg_color:       '#1f2a38'  // Фон нижней панели Mini App
+              },
                 initData: parseInitData(initDataRaw),
                 initDataRaw,
                 version: '8',

@@ -15,6 +15,9 @@
 import { ref, computed } from 'vue'
 import { themeParams } from '@telegram-apps/sdk-vue'
 
+
+
+console.log(themeParams.secondaryBackgroundColor())
 // Объявляем событие 'skip'
 const emit = defineEmits<{
   (e: 'skip'): void;
@@ -26,7 +29,6 @@ const disabled = computed(() => props.disabled ?? false)
 
 // Локальное состояние hover
 const isHovered = ref(false)
-
 // Стиль кнопки с вызовом функций signals вместо .value
 const buttonStyle = computed(() => ({
   backgroundColor:
