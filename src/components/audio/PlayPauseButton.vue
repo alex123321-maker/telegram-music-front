@@ -1,6 +1,6 @@
 <template>
   <button
-    @click="$emit('toggle')"
+    @click="emit('toggle')"
     class="p-2 rounded-full"
     :style="buttonStyle"
   >
@@ -44,14 +44,14 @@ const buttonStyle = computed(() => {
   if (props.isPlaying) {
     return {
       ...base,
-      backgroundColor: themeParams.button_color,
-      color: themeParams.button_text_color,
+      backgroundColor: themeParams.buttonColor(),
+      color: themeParams.buttonTextColor(),
     }
   } else {
     return {
       ...base,
-      backgroundColor: themeParams.secondary_bg_color,
-      color: themeParams.text_color,
+      backgroundColor: themeParams.secondaryBackgroundColor(),
+      color: themeParams.textColor(),
     }
   }
 })

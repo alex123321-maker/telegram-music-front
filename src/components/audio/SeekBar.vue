@@ -38,9 +38,9 @@ const emit = defineEmits<{
 
 
 // Вычисляем цвета на основе themeParams
-const trackBg = computed(() => themeParams.secondary_bg_color)
-const fillColor = computed(() => themeParams.button_color)
-const textColor = computed(() => themeParams.text_color)
+const trackBg = computed(() => themeParams.secondaryBackgroundColor())
+const fillColor = computed(() => themeParams.buttonColor())
+const textColor = computed(() => themeParams.textColor())
 
 const barRef = ref<HTMLElement | null>(null)
 const dragging = ref(false)

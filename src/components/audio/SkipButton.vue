@@ -1,6 +1,6 @@
 <template>
   <button
-    @click="$emit('skip')"
+    @click="emit('skip')"
     :disabled="disabled"
     class="p-2 rounded-full transition"
     @mouseenter="isHovered = true"
@@ -15,23 +15,27 @@
 import { ref, computed } from 'vue'
 import { themeParams } from '@telegram-apps/sdk-vue'
 
+// Объявляем событие 'skip'
+const emit = defineEmits<{
+  (e: 'skip'): void;
+}>()
 
-
+// Принимаем пропс и задаём булевый дефолт
 const props = defineProps<{ disabled?: boolean }>()
-const emit = defineEmits<['skip']>()
+const disabled = computed(() => props.disabled ?? false)
 
+// Локальное состояние hover
 const isHovered = ref(false)
 
+// Стиль кнопки с вызовом функций signals вместо .value
 const buttonStyle = computed(() => ({
-  // фон при ховере (если не disabled) и прозрачный в обычном состоянии
   backgroundColor:
-    isHovered.value && !props.disabled
-      ? themeParams.secondary_bg_color
+    isHovered.value && !disabled.value
+      ? themeParams.secondaryBackgroundColor()
       : 'transparent',
-  // цвет текста: hint_color для disabled, иначе основной текст
   color:
-    props.disabled
-      ? themeParams.hint_color
-      : themeParams.text_color,
+    disabled.value
+      ? themeParams.hintColor()
+      : themeParams.textColor(),
 }))
 </script>
