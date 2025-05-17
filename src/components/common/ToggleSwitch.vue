@@ -1,159 +1,99 @@
 <template>
-  <div class="checkbox-wrapper-8">
-    <input
-      :id="id"
-      class="tgl tgl-skewed "
-      type="checkbox"
-      :checked="modelValue"
-      @change="onChange"
-    />
-    <label
-      class="tgl-btn w-100"
-      :for="id"
-      :data-tg-off="offLabel"
-      :data-tg-on="onLabel"
-    />
+  <div class="mode-switcher" @click.stop>
+    <button
+      type="button"
+      class="seg-btn"
+      :class="{ 'is-active': !modelValue }"
+      @click="() => $emit('update:modelValue', false)"
+      :style="segStyle(!modelValue)"
+    >
+      {{ offLabel }}
+    </button>
+    <button
+      type="button"
+      class="seg-btn"
+      :class="{ 'is-active': modelValue }"
+      @click="() => $emit('update:modelValue', true)"
+      :style="segStyle(modelValue)"
+    >
+      {{ onLabel }}
+    </button>
+    <div class="seg-underline" :style="underlineStyle" />
   </div>
-  <p class="text-xs text-gray-200 mt-1">
-        {{ modelValue
-          ? 'Показать треки, содержащие все выбранные теги'
-          : 'Показать треки, содержащие хотя бы один из выбранных тегов' }}
-      </p>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { themeParams } from '@telegram-apps/sdk-vue'
 
 const props = defineProps<{
   modelValue: boolean
-  /** Метка для состояния «выключено» */
   offLabel?: string
-  /** Метка для состояния «включено» */
   onLabel?: string
 }>()
-
 const emit = defineEmits<{
   (e: 'update:modelValue', v: boolean): void
 }>()
 
-// Метки по умолчанию
-const offLabel = props.offLabel ?? 'Хоть один'
-const onLabel  = props.onLabel  ?? 'Все'
+const offLabel = computed(() => props.offLabel ?? 'Хоть один')
+const onLabel  = computed(() => props.onLabel  ?? 'Все')
 
-// Генерируем уникальный ID для <input> и <label>
-const id = 'tgl_' + Math.random().toString(36).substr(2, 9)
+// Заберём цвета темы один раз
+const btnColor  = themeParams.buttonColor()
+const btnText   = themeParams.buttonTextColor()
+const textMain  = themeParams.textColor()
 
-// При смене состояния эмитим новое значение v-model
-function onChange(e: Event) {
-  emit('update:modelValue', (e.target as HTMLInputElement).checked)
+// Общий стиль для каждой кнопки
+function segStyle(active: boolean) {
+  return {
+    backgroundColor: 'transparent',
+    color: active ? btnText : textMain,
+  }
 }
+
+// Стиль для скользящей линии
+const underlineStyle = computed(() => ({
+  backgroundColor: btnColor,
+  transform: `translateX(${props.modelValue ? 100 : 0}%)`,
+}))
 </script>
 
 <style scoped>
-.checkbox-wrapper-8 .tgl {
-  display: none;
-}
-.checkbox-wrapper-8 .tgl,
-.checkbox-wrapper-8 .tgl:after,
-.checkbox-wrapper-8 .tgl:before,
-.checkbox-wrapper-8 .tgl *,
-.checkbox-wrapper-8 .tgl *:after,
-.checkbox-wrapper-8 .tgl *:before,
-.checkbox-wrapper-8 .tgl + .tgl-btn {
-  box-sizing: border-box;
-}
-.checkbox-wrapper-8 .tgl::-moz-selection,
-.checkbox-wrapper-8 .tgl:after::-moz-selection,
-.checkbox-wrapper-8 .tgl:before::-moz-selection,
-.checkbox-wrapper-8 .tgl *,
-.checkbox-wrapper-8 .tgl *:after,
-.checkbox-wrapper-8 .tgl *:before,
-.checkbox-wrapper-8 .tgl + .tgl-btn::-moz-selection,
-.checkbox-wrapper-8 .tgl::selection,
-.checkbox-wrapper-8 .tgl:after::selection,
-.checkbox-wrapper-8 .tgl:before::selection,
-.checkbox-wrapper-8 .tgl *::selection,
-.checkbox-wrapper-8 .tgl *:after::selection,
-.checkbox-wrapper-8 .tgl *:before::selection,
-.checkbox-wrapper-8 .tgl + .tgl-btn::selection {
-  background: none;
-}
-.checkbox-wrapper-8 .tgl + .tgl-btn {
-  outline: 0;
-  display: block;
-  width: auto;
-  height: 2em;
+.mode-switcher {
   position: relative;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-.checkbox-wrapper-8 .tgl + .tgl-btn:after,
-.checkbox-wrapper-8 .tgl + .tgl-btn:before {
-  position: relative;
-  display: block;
-  content: "";
-  width: 50%;
-  height: 100%;
-}
-.checkbox-wrapper-8 .tgl + .tgl-btn:after {
-  left: 0;
-}
-.checkbox-wrapper-8 .tgl + .tgl-btn:before {
-  display: none;
-}
-.checkbox-wrapper-8 .tgl:checked + .tgl-btn:after {
-  left: 50%;
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid var(--underline-inactive, transparent);
 }
 
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn {
-  overflow: hidden;
-  transform: skew(-10deg);
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-  transition: all 0.2s ease;
-  font-family: sans-serif;
-  background: #888;
+.seg-btn {
+  flex: 1;
+  /* убрали паддинг целиком */
+  padding: 0;
+  height: 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.2s;
 }
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after,
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
-  transform: skew(10deg);
-  display: inline-block;
-  transition: all 0.2s ease;
-  width: 100%;
-  text-align: center;
+
+/* скользящая подчёркивающая линия */
+.seg-underline {
   position: absolute;
-  line-height: 2em;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
-}
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after {
-  left: 100%;
-  content: attr(data-tg-on);
-}
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
+  bottom: 0;
   left: 0;
-  content: attr(data-tg-off);
+  width: 50%;
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 0;
 }
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn:active {
-  background: #888;
-}
-.checkbox-wrapper-8 .tgl-skewed + .tgl-btn:active:before {
-  left: -10%;
-}
-.checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn {
-  background: bg-blue-600#155dfc;
-}
-.checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:before {
-  left: -100%;
-}
-.checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:after {
-  left: 0;
-}
-.checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:active:after {
-  left: 10%;
+
+/* Активный текст чуть жирнее */
+.seg-btn.is-active {
+  font-weight: 700;
 }
 </style>

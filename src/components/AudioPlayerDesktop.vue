@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div class="max-w-3xl mx-auto flex items-center justify-between p-4">
+    <div class="max-w-3xl mx-auto flex items-center justify-between pt-2">
       <!-- Кнопки Prev/Play/Next -->
       <div class="flex items-center space-x-4">
         <button

@@ -4,11 +4,15 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
-    <button @click="handleClick" class="p-2 rounded-full hover:bg-gray-200 transition">
+    <button
+      @click="handleClick"
+      class="p-2 rounded-full transition"
+      :style="buttonStyle"
+    >
       <svg
-        v-if="isMuted"
+        v-if="props.isMuted"
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 text-gray-600"
+        class="h-6 w-6"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -23,7 +27,7 @@
       <svg
         v-else
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 text-gray-600"
+        class="h-6 w-6"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -49,13 +53,14 @@
       @touchstart.stop
       @touchmove.prevent="onTouchMove"
       class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 -rotate-90 w-24 h-2 appearance-none transition-all duration-300"
-      :style="{ background: background }"
+      :style="sliderStyle"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
+import { themeParams } from '@telegram-apps/sdk-vue'
 
 const props = defineProps<{
   volume: number
@@ -71,16 +76,24 @@ const showSlider = ref(false)
 const isTouch = ref(false)
 const slider = ref<HTMLInputElement | null>(null)
 let hideTimeout: number | null = null
-const background = ref('')
 
-// обновляем фон ползунка при изменении громкости/мьюта
-function updateBackground() {
+// Динамически пересчитываем фон ползунка
+const sliderStyle = computed(() => {
   const pct = props.isMuted ? 0 : props.volume * 100
-  background.value = `linear-gradient(to right, #3b82f6 ${pct}%, #e5e7eb ${pct}%)`
-}
+  return {
+    background: `linear-gradient(to right, ${themeParams.buttonColor()} ${pct}%, ${themeParams.secondaryBackgroundColor()} ${pct}%)`
+  }
+})
 
-watch(() => props.volume, updateBackground, { immediate: true })
-watch(() => props.isMuted, updateBackground, { immediate: true })
+// Динамический стиль для кнопки
+const buttonStyle = computed(() => ({
+  backgroundColor: themeParams.secondaryBackgroundColor(),
+  color: themeParams.textColor()
+}))
+
+// Перехватываем изменения громкости и мьюта для обновления стилей
+watch(() => props.volume, () => {}, { immediate: true })
+watch(() => props.isMuted,   () => {}, { immediate: true })
 
 onMounted(() => {
   isTouch.value = 'ontouchstart' in window
@@ -93,16 +106,12 @@ onBeforeUnmount(() => {
 function handleClick() {
   if (isTouch.value) {
     if (showSlider.value) {
-      // если слайдер уже открыт на мобильном — тапаем по кнопке для мьюта
       emit('update:isMuted', !props.isMuted)
     } else {
-      // открываем слайдер
       showSlider.value = true
-      // автоскрытие через 5 секунд
       hideTimeout = window.setTimeout(() => (showSlider.value = false), 5000)
     }
   } else {
-    // на десктопе кликом переключаем мьют
     emit('update:isMuted', !props.isMuted)
   }
 }
@@ -138,7 +147,7 @@ function onTouchMove(e: TouchEvent) {
 </script>
 
 <style scoped>
-/* Стили ползунка (для WebKit и Firefox) */
+/* Ползунок WebKit */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 1rem;
@@ -147,6 +156,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: white;
   border: 1px solid #ccc;
 }
+/* Ползунок Firefox */
 input[type="range"]::-moz-range-thumb {
   width: 1rem;
   height: 1rem;

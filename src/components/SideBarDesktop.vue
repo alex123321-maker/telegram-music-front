@@ -1,31 +1,33 @@
 <template>
   <aside
-    class="bg-gray-500 shadow-md p-4 h-full w-80"
+    class="shadow-md p-4 h-full w-80 flex flex-col"
+    :style="sidebarStyle"
   >
     <MySection title="Поиск">
       <SearchInput v-model="searchQuery" placeholder="Искать..." />
     </MySection>
     <MySection title="Дополнительно">
-      <ToggleSwitch v-model="onlyFavorites" label="Только избранное" />
+      <ToggleSwitch v-model="matchAllTags"/>
+      <p class="text-xs mt-1" :style="themeParams.textColor()">
+        {{ matchAllTags
+          ? 'Показать треки, содержащие все выбранные теги'
+          : 'Показать треки, содержащие хотя бы один из выбранных тегов' }}
+      </p>
     </MySection>
-
     <MySection title="Теги">
       <TagList v-model="selectedTags" :tags="tags" />
-
     </MySection>
-
-
   </aside>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { themeParams } from '@telegram-apps/sdk-vue'
 import MySection from '@/components/common/MySection.vue'
 import SearchInput from '@/components/common/SearchInput.vue'
 import TagList from '@/components/common/TagList.vue'
 import ToggleSwitch from '@/components/common/ToggleSwitch.vue'
 
-// Пример набора тегов (замените на реальные данные)
 const tags = ref<string[]>([
   'Реактивные рецепты',
   'Завтраки',
@@ -39,13 +41,15 @@ const tags = ref<string[]>([
 const searchQuery = ref('')
 const selectedTags = ref<string[]>([])
 const matchAllTags = ref(false)
-const onlyFavorites = ref(false)
 
-function setFilterMode(val: boolean) {
-  matchAllTags.value = val
-}
+// Стили боковой панели из темы
+const sidebarStyle = computed(() => ({
+  backgroundColor: themeParams.sectionBackgroundColor(),
+  color:            themeParams.textColor(),
+  borderRight:      `1px solid ${themeParams.sectionSeparatorColor()}`
+}))
 </script>
 
 <style scoped>
-/* Для десктопа сайдбар всегда статичен, поэтому нет fixed/transform */
+/* Убираем фиксированные Tailwind-цвета, остальное остаётся */
 </style>

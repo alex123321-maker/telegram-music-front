@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-wrap gap-2">
+  <div
+    class="flex flex-wrap gap-2"
+    :style="{ backgroundColor: themeParams.backgroundColor() }"
+  >
     <TagButton
       v-for="t in tags"
       :key="t"
@@ -11,12 +14,14 @@
 </template>
 
 <script setup lang="ts">
+import { themeParams } from '@telegram-apps/sdk-vue'
 import TagButton from '@/components/common/TagButton.vue'
 
 const props = defineProps<{
   modelValue: string[]
   tags: string[]
 }>()
+
 const emit = defineEmits<{
   (e: 'update:modelValue', v: string[]): void
 }>()
