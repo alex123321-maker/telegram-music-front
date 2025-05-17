@@ -43,7 +43,7 @@ const emit = defineEmits<{
 const isOpen = ref(false)
 
 const searchQuery   = ref('')
-const selectedTags  = ref<string[]>([])
+const selectedTags  = ref<number[]>([])
 const matchAllTags  = ref(false)
 
 function setFilterMode(val: boolean) {

@@ -31,7 +31,7 @@ import ToggleSwitch from '@/components/common/ToggleSwitch.vue'
 
 
 const searchQuery = ref('')
-const selectedTags = ref<string[]>([])
+const selectedTags = ref<number[]>([])
 const matchAllTags = ref(false)
 
 // Стили боковой панели из темы
