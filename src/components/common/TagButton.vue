@@ -1,44 +1,33 @@
 <template>
   <button
-    @click="emit('click', tag)"
-    class="px-2 py-1 rounded-full text-sm font-medium transition"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
-    :style="buttonStyle"
+    class="px-3 pb-2 pt-1 rounded-2xl text-sm font-medium transition duration-150 ease-in-out
+           disabled:opacity-50 disabled:cursor-not-allowed
+           text-[var(--tg-theme-text-color)]
+           hover:bg-[var(--tg-theme-link-color)]"
+    :class="active
+      ? 'bg-[var(--tg-theme-button-color)] text-[var(--tg-theme-button-text-color)]'
+      : 'bg-[var(--tg-theme-secondary-bg-color)]'"
+    :disabled="disabled"
+    @click="handleClick"
   >
-    {{ tag }}
+    {{ tag.Name }}
   </button>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
-
 const props = defineProps<{
-  tag: string
+  tag: { tagID: number; Name: string }
   active?: boolean
+  disabled?: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'click', tag: string): void
+  (e: 'click', tagID: number): void
 }>()
 
-const isHovered = ref(false)
-
-const buttonStyle = computed(() => {
-  if (props.active) {
-    return {
-      backgroundColor: themeParams.buttonColor(),     // основной фон кнопки :contentReference[oaicite:0]{index=0}
-      color:           themeParams.buttonTextColor()  // цвет текста кнопки :contentReference[oaicite:1]{index=1}
-    }
-  } else {
-    return {
-      backgroundColor: themeParams.secondaryBackgroundColor(), // фон неактивного состояния :contentReference[oaicite:2]{index=2}
-      color:           themeParams.textColor(),        // цвет текста неактивного состояния :contentReference[oaicite:3]{index=3}
-      ...(isHovered.value && {
-        backgroundColor: themeParams.linkColor()      // фон при hover (неактивная) :contentReference[oaicite:4]{index=4}
-      })
-    }
+function handleClick() {
+  if (!props.disabled) {
+    emit('click', props.tag.tagID)
   }
-})
+}
 </script>

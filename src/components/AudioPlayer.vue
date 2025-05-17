@@ -20,7 +20,6 @@ type Props = {
   loop?: boolean
 }
 const props = defineProps<Props>()
-
 const isMobile = ref(false)
 
 const updateIsMobile = () => {

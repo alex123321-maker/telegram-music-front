@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { initDataRaw as initDataRaw } from '@telegram-apps/sdk-vue' // Vue SDK 2.x
+import { initDataRaw } from '@telegram-apps/sdk-vue' // Vue SDK 2.x
 
 /** Инициализируем once и экспортируем */
 const apiClient = axios.create({
@@ -8,14 +8,14 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' }
 })
 
-apiClient.interceptors.request.use(config => {
-  const rawInitData = initDataRaw()
-  if (rawInitData) {
-    config.headers['X-Tg-Init-Data'] = rawInitData
-  }else{
-    console.error("INIT DATA BROKEN: ",rawInitData)
-  }
-  return config
-})
+// apiClient.interceptors.request.use(config => {
+//   const rawInitData = initDataRaw()
+//   if (rawInitData) {
+//     config.headers['X-Tg-Init-Data'] = rawInitData
+//   }else{
+//     console.error("INIT DATA BROKEN: ",rawInitData)
+//   }
+//   return config
+// })
 
 export default apiClient

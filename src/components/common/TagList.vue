@@ -5,32 +5,49 @@
   >
     <TagButton
       v-for="t in tags"
-      :key="t"
+      :key="t.tagID"
       :tag="t"
-      :active="modelValue.includes(t)"
+      :active="modelValue.includes(t.tagID)"
       @click="toggleTag"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { themeParams } from '@telegram-apps/sdk-vue'
+import { getUserTags } from '@/api/mediaTags'
 import TagButton from '@/components/common/TagButton.vue'
 
+interface Tag {
+  tagID: number
+  Name: string
+}
+
 const props = defineProps<{
-  modelValue: string[]
-  tags: string[]
+  modelValue: number[]
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', v: string[]): void
+  (e: 'update:modelValue', value: number[]): void
 }>()
 
-function toggleTag(tag: string) {
-  const idx = props.modelValue.indexOf(tag)
+const tags = ref<Tag[]>([])
+
+onMounted(async () => {
+  tags.value = await getUserTags()
+})
+
+function toggleTag(tag_id: number) {
+  const index = props.modelValue.indexOf(tag_id)
   const next = [...props.modelValue]
-  if (idx === -1) next.push(tag)
-  else next.splice(idx, 1)
+
+  if (index === -1) {
+    next.push(tag_id)
+  } else {
+    next.splice(index, 1)
+  }
+
   emit('update:modelValue', next)
 }
 </script>

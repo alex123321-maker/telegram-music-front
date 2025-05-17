@@ -9,7 +9,7 @@
     :style="sidebarStyle"
   >
     <MySection title="Поиск">
-      <SearchInput v-model="searchQuery" placeholder="Искать..." />
+      <SearchInput v-model="searchQuery" placeholder="Искать тег..." />
     </MySection>
     <MySection title="Дополнительно">
       <ToggleSwitch v-model="matchAllTags"/>
@@ -20,7 +20,7 @@
       </p>
     </MySection>
     <MySection title="Теги">
-      <TagList v-model="selectedTags" :tags="tags" />
+      <TagList v-model="selectedTags"/>
     </MySection>
 
 
@@ -41,15 +41,7 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(false)
-const tags = ref<string[]>([
-  'Реактивные рецепты',
-  'Завтраки',
-  'Постные блюда',
-  'Быстро и вкусно',
-  'Без сахара',
-  'Микс витаминов',
-  'Салаты',
-])
+
 const searchQuery   = ref('')
 const selectedTags  = ref<string[]>([])
 const matchAllTags  = ref(false)

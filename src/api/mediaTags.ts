@@ -2,9 +2,26 @@ import apiClient from './client'
 import type { MediaTag } from './models'   // добавьте в models.ts, если нужно тип ответа
 
 export interface LinkTagRequest {
-  tg_id:    number
   media_id: number
   tag_id:   number
+}
+
+export interface MediaTagWithName {
+  tagID: number
+  Name: string
+}
+
+/**
+ * Получить все уникальные теги, связанные с текущим пользователем
+ * (tg_id извлекается на сервере через X-Tg-Init-Data)
+ */
+export async function getUserTags(): Promise<MediaTagWithName[]> {
+  const { data } = await apiClient.get<MediaTagWithName[]>('/my-tags')
+  return data
+}
+export async function getMediaTags(id: number): Promise<MediaTagWithName[]> {
+  const { data } = await apiClient.get<MediaTagWithName[]>(`media/${id}/my-tags`)
+  return data
 }
 
 export async function linkTagToMedia(

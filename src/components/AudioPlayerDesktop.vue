@@ -5,6 +5,8 @@
     :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
   >
     <!-- Прогресс-бар -->
+    <MediaTagBar :media_id="media_id"></MediaTagBar>
+
     <div
       ref="progressBar"
       class="h-2 cursor-pointer relative"
@@ -139,7 +141,10 @@
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { Howl } from 'howler'
 import { themeParams } from '@telegram-apps/sdk-vue'
-console.log(themeParams.bottomBarBgColor())
+import MediaTagBar from './audio/MediaTagBar.vue'
+
+const media_id = 6
+
 type Props = {
   src: string
   cover: string

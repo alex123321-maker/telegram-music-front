@@ -50,8 +50,8 @@ async function resolveVideo() {
 
   try {
     const data = await resolveYouTubeVideo(youtubeUrl.value)
-
-    if (data?.audio_url) {
+    console.log(data)
+    if (data.audio_url) {
       audioUrl.value = data.audio_url
       artist.value = data.artist ?? 'Нет артиста'
       title.value = data.title
