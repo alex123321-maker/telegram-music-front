@@ -1,11 +1,10 @@
 <template>
 
   <div
-    class="w-full px-4 py-2"
-    :style="{ backgroundColor: themeParams.backgroundColor() }"
+  class="w-full "
   >
-    <!-- Теги песни -->
-    <MediaTagBar :media_id="media_id" />
+  <!-- Теги песни -->
+  <MediaTagBar :media_id="media_id" />
 
     <!-- Прогресс-бар с возможностью тащить мышью -->
     <SeekBar
@@ -16,17 +15,17 @@
     />
 
     <!-- Основная панель управления (шире, чем на телефоне) -->
-    <div class="max-w-5xl mx-auto flex items-center justify-between pt-3">
+    <div class="max-w-5xl mx-auto flex items-center justify-between pt-3"
+    :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
+
+    >
       <!-- Кнопки навигации и Play/Pause -->
       <div class="flex items-center gap-2">
-        <SkipButton direction="prev" @click="prevTrack"><svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
-    <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
-  </svg></SkipButton>
+        <SkipButton direction="prev" @click="prevTrack">
+          <svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24"><path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/></svg></SkipButton>
         <PlayPauseButton :is-playing="isPlaying" @click="togglePlay" />
         <SkipButton direction="next" @click="nextTrack">
-          <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24">
-            <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
-          </svg>
+          <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24"><path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/></svg>
         </SkipButton>
       </div>
 

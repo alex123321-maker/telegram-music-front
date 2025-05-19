@@ -1,11 +1,10 @@
 <template>
   <div
-    class="fixed bottom-0 left-0 w-full"
-    style="touch-action: none;"
-    :style="{ backgroundColor: themeParams.backgroundColor() }"
+  class="fixed bottom-0 left-0 w-full"
+  style="touch-action: none;"
   >
-    <!-- Панель тегов -->
-    <MediaTagBar :media_id="media_id" />
+  <!-- Панель тегов -->
+  <MediaTagBar :media_id="media_id" />
 
     <!-- SeekBar с v-model:progress -->
     <SeekBar
@@ -16,7 +15,10 @@
     />
 
     <!-- Кнопки управления -->
-    <div class="flex items-center px-4 py-2">
+    <div class="flex items-center py-2"
+    :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
+
+    >
       <SkipButton direction="prev" @click="prevTrack"><svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
         <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
       </svg></SkipButton>
