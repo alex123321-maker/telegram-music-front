@@ -5,7 +5,7 @@
     :style="{ backgroundColor: themeParams.backgroundColor() }"
   >
     <!-- Теги песни -->
-    <MediaTagBar :media-id="media_id" />
+    <MediaTagBar :media_id="media_id" />
 
     <!-- Прогресс-бар с возможностью тащить мышью -->
     <SeekBar

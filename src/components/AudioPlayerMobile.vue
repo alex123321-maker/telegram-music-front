@@ -5,7 +5,7 @@
     :style="{ backgroundColor: themeParams.backgroundColor() }"
   >
     <!-- Панель тегов -->
-    <MediaTagBar :media-id="media_id" />
+    <MediaTagBar :media_id="media_id" />
 
     <!-- SeekBar с v-model:progress -->
     <SeekBar
@@ -154,6 +154,10 @@ onBeforeUnmount(() => {
   sound.unload()
   cancelAnimationFrame(rafId)
 })
+
+function prevTrack () { /* TODO: логика переключения */ }
+function nextTrack () { /* TODO: логика переключения */ }
+
 </script>
 
 <style scoped>
