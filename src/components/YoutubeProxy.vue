@@ -12,7 +12,6 @@
       type="text"
       placeholder="Вставь ссылку на YouTube"
       class="w-full max-w-md px-4 py-2 rounded-lg mb-4"
-      @paste.prevent="handlePaste(t => query = t)"
       :style="inputStyle"
     />
 
@@ -32,10 +31,7 @@
 import { ref, computed } from 'vue'
 import { themeParams } from '@telegram-apps/sdk-vue'
 import { resolveYouTubeVideo } from '@/api/resolve'
-import { handlePaste } from '@/helpers/handlePaste'
 
-const query = ref('')
-/** Ссылка на видео и сообщение об ошибке */
 const youtubeUrl = ref('')
 const error = ref('')
 
