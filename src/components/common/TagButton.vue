@@ -2,7 +2,7 @@
   <button
     :disabled="disabled"
     @click="handleClick"
-    class="px-3 pb-2 pt-1 rounded-2xl text-sm font-medium transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed shadow-md "
+    class="px-2 py-1 rounded-md text-sm font-medium transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed shadow-md "
     :style="buttonStyle"
   >
     {{ tag.Name }}
