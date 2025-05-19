@@ -1,7 +1,6 @@
 <template>
   <div
     class="flex flex-wrap gap-2"
-    :style="{ backgroundColor: themeParams.backgroundColor() }"
   >
     <TagButton
       v-for="t in tags"
@@ -15,7 +14,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
 import { getUserTags } from '@/api/mediaTags'
 import TagButton from '@/components/common/TagButton.vue'
 

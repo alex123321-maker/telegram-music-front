@@ -1,7 +1,6 @@
 <template>
   <div
     class="my-4"
-    :style="{ backgroundColor: themeParams.sectionBackgroundColor() }"
   >
     <h3
       v-if="title"

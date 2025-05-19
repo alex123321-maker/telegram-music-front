@@ -41,7 +41,8 @@ const onLabel  = computed(() => props.onLabel  ?? 'Все')
 // Заберём цвета темы один раз
 const btnColor  = themeParams.buttonColor()
 const btnText   = themeParams.buttonTextColor()
-const textMain  = themeParams.textColor()
+const textMain  = themeParams.subtitleTextColor()
+
 
 // Общий стиль для каждой кнопки
 function segStyle(active: boolean) {

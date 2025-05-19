@@ -42,7 +42,7 @@ onBeforeUnmount(() => {
 
 // Динамический фон по теме
 const wrapperStyle = computed(() => ({
-  backgroundColor: themeParams.backgroundColor()
+  backgroundColor: themeParams.secondaryBackgroundColor()
 }))
 </script>
 

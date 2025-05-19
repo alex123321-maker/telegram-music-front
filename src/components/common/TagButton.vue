@@ -1,20 +1,17 @@
 <template>
   <button
-    class="px-3 pb-2 pt-1 rounded-2xl text-sm font-medium transition duration-150 ease-in-out
-           disabled:opacity-50 disabled:cursor-not-allowed
-           text-[var(--tg-theme-text-color)]
-           hover:bg-[var(--tg-theme-link-color)]"
-    :class="active
-      ? 'bg-[var(--tg-theme-button-color)] text-[var(--tg-theme-button-text-color)]'
-      : 'bg-[var(--tg-theme-secondary-bg-color)]'"
     :disabled="disabled"
     @click="handleClick"
+    class="px-3 pb-2 pt-1 rounded-2xl text-sm font-medium transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed shadow-md "
+    :style="buttonStyle"
   >
     {{ tag.Name }}
   </button>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { themeParams } from '@telegram-apps/sdk-vue'
 const props = defineProps<{
   tag: { tagID: number; Name: string }
   active?: boolean
@@ -30,4 +27,18 @@ function handleClick() {
     emit('click', props.tag.tagID)
   }
 }
+
+const buttonStyle = computed(() => {
+  if (props.active) {
+    return {
+      backgroundColor: themeParams.buttonColor(),
+      color:           themeParams.buttonTextColor()
+    }
+  } else {
+    return {
+      backgroundColor: themeParams.secondaryBackgroundColor(),
+      color:           themeParams.textColor()
+    }
+  }
+})
 </script>

@@ -5,7 +5,7 @@
   <!-- Сам сайдбар -->
   <aside
     ref="sidebar"
-    class="fixed top-0 right-0 px-3 z-40 h-full w-64 shadow-md transform transition-transform duration-300 ease-in-out"
+    class="fixed top-0 right-0 px-3 z-40 h-full w-64 transform transition-transform duration-300 ease-in-out"
     :style="sidebarStyle"
   >
     <MySection title="Поиск">
@@ -13,7 +13,7 @@
     </MySection>
     <MySection title="Дополнительно">
       <ToggleSwitch v-model="matchAllTags"/>
-      <p class="text-xs mt-1" :style="themeParams.textColor()">
+      <p class="text-xs mt-1" :style="themeParams.hintColor()">
         {{ matchAllTags
           ? 'Показать треки, содержащие все выбранные теги'
           : 'Показать треки, содержащие хотя бы один из выбранных тегов' }}
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 
 // фон боковой панели
 const sidebarStyle = computed(() => ({
-  backgroundColor: themeParams.sectionBackgroundColor(),
+  backgroundColor: themeParams.secondaryBackgroundColor(),
   transform:       isOpen.value ? 'translateX(0)' : 'translateX(100%)',
   borderLeft:      `1px solid ${themeParams.sectionSeparatorColor()}`
 }))

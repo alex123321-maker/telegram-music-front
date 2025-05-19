@@ -1,13 +1,14 @@
 <template>
   <div
-    class="flex gap-2 flex-wrap items-center px-2 pb-1"
-    :style="{ backgroundColor: themeParams.backgroundColor() }"
+    class="flex gap-2 flex-wrap items-center px-2 pb-1 bg-transparent"
   >
     <TagButton
       v-for="tag in tags"
       :key="tag.tagID"
       :tag="tag"
       :disabled="true"
+      :active="true"
+
     />
   </div>
 </template>

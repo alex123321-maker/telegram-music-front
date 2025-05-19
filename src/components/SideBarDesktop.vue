@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="shadow-md p-4 h-full w-80 flex flex-col"
+    class="p-4 h-full w-80 flex flex-col"
     :style="sidebarStyle"
   >
     <MySection title="Поиск">
@@ -8,7 +8,7 @@
     </MySection>
     <MySection title="Дополнительно">
       <ToggleSwitch v-model="matchAllTags"/>
-      <p class="text-xs mt-1" :style="themeParams.textColor()">
+      <p class="text-xs mt-1" :style="themeParams.hintColor()">
         {{ matchAllTags
           ? 'Показать треки, содержащие все выбранные теги'
           : 'Показать треки, содержащие хотя бы один из выбранных тегов' }}
@@ -36,7 +36,6 @@ const matchAllTags = ref(false)
 
 // Стили боковой панели из темы
 const sidebarStyle = computed(() => ({
-  backgroundColor: themeParams.sectionBackgroundColor(),
   color:            themeParams.textColor(),
   borderRight:      `1px solid ${themeParams.sectionSeparatorColor()}`
 }))

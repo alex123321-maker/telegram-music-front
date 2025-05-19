@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center space-x-4 overflow-hidden">
-    <img :src="cover" alt="cover" class="h-12 w-12 rounded" />
+    <img :src="cover" alt="cover" class="h-12 w-12 rounded object-cover" />
     <div class="flex flex-col">
       <span
         class="font-semibold truncate"

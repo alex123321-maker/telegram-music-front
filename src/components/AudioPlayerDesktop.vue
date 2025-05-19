@@ -1,150 +1,69 @@
 <template>
+
   <div
-    class="fixed bottom-0 left-0 w-full shadow-lg"
-    style="touch-action: none;"
-    :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
+    class="w-full px-4 py-2"
+    :style="{ backgroundColor: themeParams.backgroundColor() }"
   >
-    <!-- Прогресс-бар -->
-    <MediaTagBar :media_id="media_id"></MediaTagBar>
+    <!-- Теги песни -->
+    <MediaTagBar :media-id="media_id" />
 
-    <div
-      ref="progressBar"
-      class="h-2 cursor-pointer relative"
-      @mousedown.prevent="startSeek"
-      @touchstart.prevent="startSeek"
-      :style="{ backgroundColor: themeParams.secondaryBackgroundColor() }"
-    >
-      <div
-        class="h-full"
-        :style="{
-          width: progress + '%',
-          backgroundColor: themeParams.buttonColor()
-        }"
+    <!-- Прогресс-бар с возможностью тащить мышью -->
+    <SeekBar
+      v-model:progress="progress"
+      :duration="duration"
+      @start="pauseLoop"
+      @end="resumeLoop"
+    />
+
+    <!-- Основная панель управления (шире, чем на телефоне) -->
+    <div class="max-w-5xl mx-auto flex items-center justify-between pt-3">
+      <!-- Кнопки навигации и Play/Pause -->
+      <div class="flex items-center gap-2">
+        <SkipButton direction="prev" @click="prevTrack"><svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
+    <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
+  </svg></SkipButton>
+        <PlayPauseButton :is-playing="isPlaying" @click="togglePlay" />
+        <SkipButton direction="next" @click="nextTrack">
+          <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24">
+            <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
+          </svg>
+        </SkipButton>
+      </div>
+
+      <!-- Инфо о треке -->
+      <TrackInfo
+        class="flex-1 px-4"
+        :cover="props.cover"
+        :title="props.title"
+        :artist="props.artist"
       />
-      <div
-        v-if="isDragging"
-        class="absolute -top-6 text-xs whitespace-nowrap transform -translate-x-1/2"
-        :style="{
-          left: progress + '%',
-          color: themeParams.textColor()
-        }"
-      >
-        {{ displayedTime }}
-      </div>
-    </div>
 
-    <div class="max-w-3xl mx-auto flex items-center justify-between pt-2">
-      <!-- Кнопки Prev/Play/Next -->
-      <div class="flex items-center space-x-4">
-        <button
-          disabled
-          class="p-2 rounded-full transition"
-          :style="{ color: themeParams.hintColor() }"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-               stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 19l-7-7 7-7m8 14V5" />
-          </svg>
-        </button>
-
-        <button
-          @click="togglePlay"
-          class="p-2 rounded-full transition duration-300 ease-in-out transform"
-          :style="playPauseStyle"
-        >
-          <svg v-if="!isPlaying" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-               fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-               fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-          </svg>
-        </button>
-
-        <button
-          disabled
-          class="p-2 rounded-full transition"
-          :style="{ color: themeParams.hintColor() }"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-               stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 5l7 7-7 7M5 5v14" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Информация о треке -->
-      <div class="flex items-center space-x-4 overflow-hidden">
-        <img :src="props.cover" alt="cover" class="h-12 w-12 rounded" />
-        <div class="flex flex-col">
-          <span
-            class="font-semibold truncate"
-            :style="{ color: themeParams.textColor() }"
-          >
-            {{ props.title }}
-          </span>
-          <span
-            class="text-sm truncate"
-            :style="{ color: themeParams.subtitleTextColor() }"
-          >
-            {{ props.artist }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Контроль громкости -->
-      <div
-        class="relative volume-control"
-        @mouseenter="onVolumeMouseEnter"
-        @mouseleave="onVolumeMouseLeave"
-      >
-        <button
-          @click="handleVolumeIconClick"
-          class="p-2 rounded-full transition"
-          :style="{
-            backgroundColor: themeParams.secondaryBackgroundColor(),
-            color: themeParams.textColor()
-          }"
-        >
-          <svg v-if="isMuted" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-               fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 5L6 9H2v6h4l5 4V5z M19 9l-4 4m0-4l4 4" />
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-               fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M11 5L6 9H2v6h4l5 4V5z" />
-          </svg>
-        </button>
-
-        <input
-          v-if="showVolume"
-          ref="volumeSlider"
-          type="range" min="0" max="1" step="0.01"
-          v-model.number="volume"
-          @input="onVolumeChange"
-          @touchstart.stop
-          @touchmove.prevent="onVolumeTouchMove"
-          class="absolute bottom-full mb-8 left-1/2 transform -translate-x-1/2 -rotate-90 w-24 h-2 appearance-none transition-all duration-300 opacity-100 scale-100"
-          :style="volumeSliderStyle"
-        />
-      </div>
+      <!-- Громкость -->
+      <VolumeControl
+        :volume="volume"
+        :is-muted="isMuted"
+        @update:volume="onVolumeChange"
+        @update:isMuted="toggleMute"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Howl } from 'howler'
 import { themeParams } from '@telegram-apps/sdk-vue'
-import MediaTagBar from './audio/MediaTagBar.vue'
+
+import MediaTagBar     from '@/components/audio/MediaTagBar.vue'
+import SeekBar         from '@/components/audio/SeekBar.vue'
+import PlayPauseButton from '@/components/audio/PlayPauseButton.vue'
+import SkipButton      from '@/components/audio/SkipButton.vue'
+import TrackInfo       from '@/components/audio/TrackInfo.vue'
+import VolumeControl   from '@/components/audio/VolumeControl.vue'
 
 const media_id = 6
 
+/** Входные пропсы */
 type Props = {
   src: string
   cover: string
@@ -155,131 +74,77 @@ type Props = {
 }
 const props = defineProps<Props>()
 
-// — состояние плеера —
-const isPlaying       = ref(false)
-const isMuted         = ref(false)
-const volume          = ref(1)
-const showVolume      = ref(false)
-const isDragging      = ref(false)
-const progress        = ref(0)
-const displayedTime   = ref('00:00')
-const dragPercent     = ref(0)
-const progressBar     = ref<HTMLElement | null>(null)
-const volumeSlider    = ref<HTMLInputElement | null>(null)
+// *** Состояние ***
+const progress      = ref(0) // 0–100 %
+const duration      = ref(0) // сек
+const displayedTime = ref('00:00')
+const isPlaying     = ref(false)
+const volume        = ref(1)
+const isMuted       = ref(false)
 
 let sound: Howl
 let rafId = 0
 
-// Форматирование времени в MM:SS
-function formatTime(sec: number): string {
+// формируем MM:SS
+function formatTime(sec: number) {
   const m = Math.floor(sec / 60)
-  const s = Math.floor(sec % 60)
-  return `${m}:${s.toString().padStart(2, '0')}`
+  const s = Math.floor(sec % 60).toString().padStart(2, '0')
+  return `${m}:${s}`
 }
 
-// Запуск/пауза
-function togglePlay(): void {
+/** Переключение Play/Pause */
+function togglePlay() {
   if (!sound) return
-  if (isPlaying.value) {
-  sound.pause()
-} else {
-  sound.play()
-}
+  if (isPlaying.value) sound.pause()
+  else sound.play()
 }
 
-// Обработчики громкости
-function handleVolumeIconClick(): void {
-  toggleMute()
+// *** Seek-логика ***
+function pauseLoop() {
+  cancelAnimationFrame(rafId)
 }
-function onVolumeChange(): void {
-  isMuted.value = volume.value === 0
-  sound.volume(volume.value)
-  updateVolumeBackground()
+function resumeLoop() {
+  if (!sound) return
+  // важный момент: переводим Howler на позицию, выбранную пользователем
+  const newPos = (progress.value / 100) * (sound.duration() || 0)
+  sound.seek(newPos)
+  rafLoop()
 }
-function toggleMute(): void {
+
+// *** RAF-обновление прогресса ***
+function updateProgress() {
+  if (!sound) return
+  const cur = (sound.seek() as number) || 0
+  const dur = sound.duration() || 0
+  progress.value = dur > 0 ? (cur / dur) * 100 : 0
+  duration.value = dur
+  displayedTime.value = formatTime(cur)
+}
+function rafLoop() {
+  updateProgress()
+  rafId = requestAnimationFrame(rafLoop)
+}
+
+// *** Громкость ***
+function onVolumeChange(v: number) {
+  volume.value = v
+  isMuted.value = v === 0
+  sound.volume(v)
+}
+function toggleMute() {
   isMuted.value = !isMuted.value
   sound.volume(isMuted.value ? 0 : volume.value)
-  updateVolumeBackground()
-}
-const volumeBackground = ref('')
-function updateVolumeBackground(): void {
-  const pct = isMuted.value ? 0 : volume.value * 100
-  volumeBackground.value =
-    `linear-gradient(to right, ${themeParams.buttonColor()} ${pct}%, ${themeParams.secondaryBackgroundColor()} ${pct}%)`
 }
 
-// Обновление прогресса
-function updateProgress(): void {
-  if (!isDragging.value) {
-    const cur = (sound.seek() as number) || 0
-    const dur = sound.duration() || 0
-    progress.value      = dur > 0 ? (cur / dur) * 100 : 0
-    displayedTime.value = formatTime(cur)
-  }
+// заглушки для prev/next — при необходимости подключите логику
+function prevTrack() {
+  /* TODO: вызвать смену трека */
 }
-function progressLoop(): void {
-  updateProgress()
-  rafId = requestAnimationFrame(progressLoop)
+function nextTrack() {
+  /* TODO: вызвать смену трека */
 }
 
-// Логика seek-а
-function startSeek(e: MouseEvent | TouchEvent): void {
-  isDragging.value = true
-  cancelAnimationFrame(rafId)
-  seek(e)
-  window.addEventListener('mousemove', seek)
-  window.addEventListener('mouseup', endSeek)
-  window.addEventListener('touchmove', seek)
-  window.addEventListener('touchend', endSeek)
-}
-function getX(e: MouseEvent | TouchEvent): number {
-  if ('touches' in e && e.touches.length) {
-    return e.touches[0].clientX
-  }
-  return (e as MouseEvent).clientX
-}
-function seek(e: MouseEvent | TouchEvent): void {
-  if (!progressBar.value) return
-  const rect = progressBar.value.getBoundingClientRect()
-  let pct = (getX(e) - rect.left) / rect.width
-  pct = Math.min(Math.max(pct, 0), 1)
-  dragPercent.value = pct
-  const dur = sound.duration() || 0
-  progress.value      = pct * 100
-  displayedTime.value = formatTime(dur * pct)
-}
-function endSeek(): void {
-  isDragging.value = false
-  window.removeEventListener('mousemove', seek)
-  window.removeEventListener('mouseup', endSeek)
-  window.removeEventListener('touchmove', seek)
-  window.removeEventListener('touchend', endSeek)
-  const dur = sound.duration() || 0
-  if (dur) sound.seek(dur * dragPercent.value)
-  rafId = requestAnimationFrame(progressLoop)
-}
-
-// Скрытие ползунка громкости по клику вне
-function onVolumeMouseEnter() { showVolume.value = true }
-function onVolumeMouseLeave() { setTimeout(() => (showVolume.value = false), 3000) }
-function onVolumeTouchMove(e: TouchEvent) {
-  e.preventDefault()
-  if (!volumeSlider.value) return
-  const rect = volumeSlider.value.getBoundingClientRect()
-  const y = e.touches[0].clientY
-  const pct = Math.min(Math.max((rect.bottom - y) / rect.height, 0), 1)
-  volume.value = pct
-  isMuted.value = pct === 0
-  sound.volume(pct)
-  updateVolumeBackground()
-}
-function handleClickOutside(event: MouseEvent) {
-  if (!(event.target as HTMLElement).closest('.volume-control')) {
-    showVolume.value = false
-  }
-}
-
-// Монтирование и размонтирование
+// *** Инициализируем Howler ***
 onMounted(() => {
   sound = new Howl({
     src: [props.src],
@@ -288,34 +153,31 @@ onMounted(() => {
     autoplay: props.autoplay ?? false,
     loop: props.loop ?? false,
     volume: volume.value,
-    onplay:  () => { isPlaying.value = true; rafId = requestAnimationFrame(progressLoop) },
-    onpause: () => { isPlaying.value = false; cancelAnimationFrame(rafId) },
-    onend:   () => { isPlaying.value = false; progress.value = 0; cancelAnimationFrame(rafId) }
+    onload: () => {
+      duration.value = sound.duration() || 0
+    },
+    onplay: () => {
+      isPlaying.value = true
+      rafLoop()
+    },
+    onpause: () => {
+      isPlaying.value = false
+      cancelAnimationFrame(rafId)
+    },
+    onend: () => {
+      isPlaying.value = false
+      progress.value  = 0
+      cancelAnimationFrame(rafId)
+    }
   })
-  updateVolumeBackground()
-  window.addEventListener('click', handleClickOutside)
 })
+
 onBeforeUnmount(() => {
   sound.unload()
   cancelAnimationFrame(rafId)
-  window.removeEventListener('click', handleClickOutside)
 })
-
-// — computed-стили для Play/Pause и ползунка —
-const playPauseStyle = computed(() => ({
-  backgroundColor: isPlaying.value
-    ? themeParams.buttonColor()
-    : themeParams.secondaryBackgroundColor(),
-  color: isPlaying.value
-    ? themeParams.buttonTextColor()
-    : themeParams.textColor(),
-  transform: isPlaying.value ? 'scale(1.1)' : 'scale(1.0)'
-}))
-const volumeSliderStyle = computed(() => ({
-  background: volumeBackground.value
-}))
 </script>
 
 <style scoped>
-/* Добавьте, если нужно, дополнительные стили */
+/* ПК‑специфические доработки, если понадобятся */
 </style>

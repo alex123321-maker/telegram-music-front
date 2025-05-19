@@ -5,7 +5,7 @@
     :style="buttonStyle"
   >
     <svg
-      v-if="!isPlaying"
+      v-if="!props.isPlaying"
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6"
       fill="currentColor"
@@ -29,9 +29,8 @@
 import { computed } from 'vue'
 import { themeParams } from '@telegram-apps/sdk-vue'
 
-
 const props = defineProps<{ isPlaying: boolean }>()
-const emit = defineEmits<['toggle']>()
+const emit = defineEmits(['toggle'])
 
 const buttonStyle = computed(() => {
   const base = {
