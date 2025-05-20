@@ -31,19 +31,22 @@ export function init(debug: boolean): void {
         throw new Error('ERR_NOT_SUPPORTED');
     }
 
-    // Mount all components used in the project.
     backButton.mount();
     miniApp.mount();
     themeParams.mount();
     initData.restore();
     void viewport
-        .mount()
-        .catch(e => {
-            console.error('Something went wrong mounting the viewport', e);
-        })
-        .then(() => {
-            viewport.bindCssVars();
-        });
+    void viewport.mount()
+    .then(() => viewport.bindCssVars())
+    .then(async () => {
+      if (viewport.requestFullscreen.isAvailable()) {
+        await viewport.requestFullscreen();
+      }
+    })
+    .catch(console.error);
+    if (viewport.requestFullscreen.isAvailable()) {
+      viewport.requestFullscreen();
+    }
 
     // Define components-related CSS variables.
     miniApp.bindCssVars();
