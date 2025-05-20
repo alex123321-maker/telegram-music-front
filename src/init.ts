@@ -24,7 +24,10 @@ export async function init(debug = false): Promise<void> {
   if (!backButton.isSupported() || !miniApp.isSupported()) {
     throw new Error('ERR_NOT_SUPPORTED');
   }
-
+  if (settingsButton.mount.isAvailable()) {
+    settingsButton.mount();
+    settingsButton.show();
+  }
   /* 3. Монтируем необходимые скоупы */
   if (themeParams.mount.isAvailable()) themeParams.mount();
   if (miniApp.mount.isAvailable())     miniApp.mount();
