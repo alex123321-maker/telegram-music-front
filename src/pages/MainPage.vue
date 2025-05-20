@@ -25,7 +25,7 @@ import {
   offSettingsButtonClick,
   onSettingsButtonClick,
   settingsButton,
-} from '@telegram-apps/sdk'
+} from '@telegram-apps/sdk-vue'
 
 import SettingsModal from '@/components/SettingsModal.vue'
 
