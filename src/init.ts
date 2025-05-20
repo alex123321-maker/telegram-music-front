@@ -32,11 +32,7 @@ export function init(debug: boolean): void {
     if (!backButton.isSupported() || !miniApp.isSupported()) {
         throw new Error('ERR_NOT_SUPPORTED');
     }
-    viewport.mount();}
-if (viewport.mount.isAvailable()) {
-    if (viewport.expand.isAvailable()) {
-      viewport.expand();
-}
+
 
     backButton.mount();
     miniApp.mount();
@@ -60,6 +56,8 @@ if (viewport.mount.isAvailable()) {
         });
     if (viewport.requestFullscreen.isAvailable()) {
       viewport.requestFullscreen();
+      viewport.expand();
+
     }
 
     // Define components-related CSS variables.
