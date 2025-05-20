@@ -30,9 +30,8 @@ function onInput(e: Event) {
 
 // Динамические стили из темы
 const inputStyle = computed(() => ({
-  backgroundColor: themeParams.backgroundColor(),
+  backgroundColor: themeParams.secondaryBackgroundColor(),
   color: themeParams.textColor(),
-  border: `1px solid ${themeParams.secondaryBackgroundColor()}`,
   '::placeholder': {
     color: themeParams.hintColor()
   },

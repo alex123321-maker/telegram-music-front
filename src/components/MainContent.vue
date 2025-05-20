@@ -8,6 +8,7 @@
       />
     </div>
 
+
     <!-- Скелетон -->
     <AudioPlayerSkeleton v-if="isLoading" />
 
@@ -30,6 +31,7 @@ import YoutubeProxy       from '@/components/YoutubeProxy.vue'
 import AudioPlayer        from '@/components/AudioPlayer.vue'
 import AudioPlayerSkeleton from '@/components/AudioPlayerSkeleton.vue'
 
+
 /** состояние */
 const audio      = ref({ src:'', artist:'', title:'', cover:'' })
 const isLoading  = ref(false)
@@ -41,7 +43,7 @@ function onResolved (payload: typeof audio.value) {
 
 /** цвета темы */
 const containerStyle = computed(() => ({
-  backgroundColor : themeParams.backgroundColor(),
+  backgroundColor : themeParams.secondaryBackgroundColor(),
   color           : themeParams.textColor()
 }))
 </script>

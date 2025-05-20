@@ -1,10 +1,7 @@
 <template>
-
-  <div
-  class="w-full "
-  >
-  <!-- Теги песни -->
-  <MediaTagBar :media_id="media_id" />
+  <div class="w-full">
+    <!-- Теги песни -->
+    <MediaTagBar :media_id="media_id" />
 
     <!-- Прогресс-бар с возможностью тащить мышью -->
     <SeekBar
@@ -15,17 +12,22 @@
     />
 
     <!-- Основная панель управления (шире, чем на телефоне) -->
-    <div class="max-w-5xl mx-auto flex items-center justify-between pt-3"
-    :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
-
+    <div
+      class="max-w-5xl mx-auto flex items-center justify-between pt-3"
+      :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
     >
       <!-- Кнопки навигации и Play/Pause -->
       <div class="flex items-center gap-2">
         <SkipButton direction="prev" @click="prevTrack">
-          <svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24"><path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/></svg></SkipButton>
+          <svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
+            <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
+          </svg>
+        </SkipButton>
         <PlayPauseButton :is-playing="isPlaying" @click="togglePlay" />
         <SkipButton direction="next" @click="nextTrack">
-          <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24"><path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/></svg>
+          <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24">
+            <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
+          </svg>
         </SkipButton>
       </div>
 
@@ -104,7 +106,6 @@ function pauseLoop() {
 }
 function resumeLoop() {
   if (!sound) return
-  // важный момент: переводим Howler на позицию, выбранную пользователем
   const newPos = (progress.value / 100) * (sound.duration() || 0)
   sound.seek(newPos)
   rafLoop()
@@ -127,21 +128,17 @@ function rafLoop() {
 // *** Громкость ***
 function onVolumeChange(v: number) {
   volume.value = v
-  isMuted.value = v === 0
   sound.volume(v)
 }
-function toggleMute() {
-  isMuted.value = !isMuted.value
-  sound.volume(isMuted.value ? 0 : volume.value)
+// Теперь `toggleMute` принимает payload: true = вмикнуть «мут», false = выключить
+function toggleMute(muted: boolean) {
+  isMuted.value = muted
+  sound.volume(muted ? 0 : volume.value)
 }
 
-// заглушки для prev/next — при необходимости подключите логику
-function prevTrack() {
-  /* TODO: вызвать смену трека */
-}
-function nextTrack() {
-  /* TODO: вызвать смену трека */
-}
+// заглушки для prev/next
+function prevTrack() { /* TODO */ }
+function nextTrack() { /* TODO */ }
 
 // *** Инициализируем Howler ***
 onMounted(() => {
@@ -178,5 +175,5 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* ПК‑специфические доработки, если понадобятся */
+/* ПК-специфические доработки, если понадобятся */
 </style>

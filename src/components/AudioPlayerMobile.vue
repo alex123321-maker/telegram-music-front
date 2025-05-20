@@ -32,6 +32,7 @@
         :artist="props.artist"
       />
       <VolumeControl
+      class="mx-4"
         :volume="volume"
         :is-muted="isMuted"
         @update:volume="onVolumeChange"

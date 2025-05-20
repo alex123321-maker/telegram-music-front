@@ -37,7 +37,6 @@ const matchAllTags = ref(false)
 // Стили боковой панели из темы
 const sidebarStyle = computed(() => ({
   color:            themeParams.textColor(),
-  borderRight:      `1px solid ${themeParams.sectionSeparatorColor()}`
 }))
 </script>
 
