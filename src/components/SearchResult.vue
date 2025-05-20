@@ -29,7 +29,7 @@
           :alt="item.snippet.title"
           class="video-thumb"
         />
-        <div class="video-info">
+        <div class="video-info h-full">
           <p class="video-title">{{ item.snippet.title }}</p>
           <p class="video-channel">{{ item.snippet.channelTitle }}</p>
         </div>
@@ -138,6 +138,8 @@ function handleScroll() {
   padding: 0.25rem;
   border-radius: 0.5rem;
   background-color: var(--tg-theme-secondary-background-color);
+  border-bottom:1px solid var(--tg-theme-section-separator-color);
+
   transition: background-color 0.2s;
 }
 .video-thumb {
@@ -145,10 +147,13 @@ function handleScroll() {
   height: 4rem;
   border-radius: 0.5rem;
   object-fit: cover;
+  border-bottom:1px solid var(--tg-theme-section-separator-color);
+  box-shadow: 0 1px 3px var(--tg-theme-section-separator-color);
 }
 .video-info {
   flex: 1;
   overflow: hidden;
+
 }
 .video-title {
   margin: 0;
