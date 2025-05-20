@@ -1,11 +1,7 @@
 <template>
   <div
     class="flex box-border h-dvh"
-    style="padding-top: var(--tg-viewport-content-safe-area-inset-top);
-    padding-bottom: var(--tg-viewport-content-safe-area-inset-bottom);
-    max-height: var(--tg-viewport-stable-height);
 
-    "
 
   >
     <Sidebar @toggle="isSidebarOpen = $event" />

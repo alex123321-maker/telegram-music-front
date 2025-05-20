@@ -34,27 +34,8 @@ export async function init(debug = false): Promise<void> {
   if (backButton.mount.isAvailable())  backButton.mount();
 
 
-  /* 5. Отключаем вертикальный свайп (если доступно) */
-  swipeBehavior.disableVertical.ifAvailable?.();
-
-  /* 6. Восстанавливаем initData */
   initData.restore();
 
-  /* 7. Viewport + fullscreen */
-  if (viewport.mount.isAvailable()) {
-    await viewport.mount().catch(e =>
-      console.error('Viewport mount error:', e),
-    );
-    viewport.bindCssVars();
-  }
-
-  if (viewport.requestFullscreen.isAvailable()) {
-    await viewport.requestFullscreen();
-    /* expand() лучше вызывать уже в fullscreen */
-    viewport.expand.ifAvailable?.();
-  }
-
-  /* 8. Проброс CSS-переменных */
   miniApp.bindCssVars.ifAvailable?.();
   themeParams.bindCssVars.ifAvailable?.();
 }
