@@ -12,7 +12,7 @@
     />
 
     <!-- Нижняя панель -->
-    <div class="bottom-bar max-w-5xl mx-auto flex items-center justify-between pt-3">
+    <div class="bottom-bar mx-auto flex items-center justify-between pt-3">
       <!-- Навигация + Play/Pause -->
       <div class="controls flex items-center gap-2">
         <SkipButton direction="prev" @click="prevTrack">
@@ -95,12 +95,14 @@ function togglePlay() {
 }
 
 function pauseLoop() {
+
   cancelAnimationFrame(rafId)
 }
 
 function resumeLoop() {
   if (!sound) return
-  sound.seek((progress.value/100) * (sound.duration()||0))
+  const target = (progress.value / 100) * duration.value
+  sound.seek(target)
   rafLoop()
 }
 

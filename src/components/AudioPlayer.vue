@@ -1,6 +1,7 @@
 <!-- src/components/AudioPlayer.vue -->
 <template>
   <component
+  class="w-full"
     :is="isMobile ? AudioPlayerMobile : AudioPlayerDesktop"
     v-bind="props"
   />

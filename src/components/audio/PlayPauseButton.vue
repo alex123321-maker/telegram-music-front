@@ -24,13 +24,43 @@
     </svg>
   </button>
 </template>
-
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount } from 'vue'
+
 const props = defineProps<{ isPlaying: boolean }>()
-const emit = defineEmits<{
-  (e: 'toggle'): void
-}>()
+const emit  = defineEmits<{ (e: 'toggle'): void }>()
+
+function handleKeydown(e: KeyboardEvent) {
+  if (e.code !== 'Space') return       // интересует только пробел
+
+  // 1. Узнаём, где сейчас фокус
+  const el = e.target as HTMLElement | null
+  const isTextInput =
+    el &&
+    (
+      el.tagName === 'INPUT' ||
+      el.tagName === 'TEXTAREA' ||
+      el.isContentEditable
+    )
+
+  if (isTextInput) {
+    // Вводит текст → не мешаем
+    return
+  }
+
+  // 2. Фокус не в поле ввода: это «горячая клавиша»
+  e.preventDefault()   // убираем прокрутку
+  emit('toggle')
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 </script>
+
 
 <style scoped>
 .play-pause-button {

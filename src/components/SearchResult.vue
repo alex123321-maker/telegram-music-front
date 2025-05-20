@@ -167,6 +167,7 @@ function handleScroll() {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);
   transition: background 0.2s ease;
+  cursor: pointer;
 }
 .video-item:hover {
   background: var(--bg);
@@ -191,6 +192,7 @@ function handleScroll() {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 .video-channel {
   margin: 0;

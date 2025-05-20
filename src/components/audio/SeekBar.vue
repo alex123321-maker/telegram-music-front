@@ -81,11 +81,11 @@ function onDrag(e: MouseEvent | TouchEvent) {
 function endDrag() {
   if (!dragging.value) return
   dragging.value = false
-  emit('end')
   window.removeEventListener('mousemove', onDrag)
   window.removeEventListener('mouseup',   endDrag)
   window.removeEventListener('touchmove', onDrag)
   window.removeEventListener('touchend',  endDrag)
+  emit('end')
 }
 
 // для попапа времени

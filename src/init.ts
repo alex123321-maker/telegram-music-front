@@ -1,66 +1,59 @@
 import {
-    backButton,
-    viewport,
-    themeParams,
-    miniApp,
-    initData,
-    $debug,
-    init as initSDK,
-    settingsButton,
-    swipeBehavior,
+  init as initSDK,
+  $debug,
+  backButton,
+  miniApp,
+  themeParams,
+  viewport,
+  initData,
+  settingsButton,
+  swipeBehavior,
 } from '@telegram-apps/sdk-vue';
 
-/**
- * Initializes the application and configures its dependencies.
- */
-export function init(debug: boolean): void {
-    // Set @telegram-apps/sdk-react debug mode.
-    $debug.set(debug);
 
-    // Initialize special event handlers for Telegram Desktop, Android, iOS, etc.
-    // Also, configure the package.
-    initSDK();
+export async function init(debug = false): Promise<void> {
+  /* 1. Инициализируем SDK и дебаг-режим */
+  $debug.set(debug);
+  initSDK();
 
-    // Add Eruda if needed.
-    if (debug) {
-        import('eruda')
-            .then((lib) => lib.default.init())
-            .catch(console.error);
-    }
+  if (debug) {
+    import('eruda').then(e => e.default.init()).catch(console.error);
+  }
 
-    // Check if all required components are supported.
-    if (!backButton.isSupported() || !miniApp.isSupported()) {
-        throw new Error('ERR_NOT_SUPPORTED');
-    }
+  /* 2. Быстрая проверка, поддерживает ли клиент базовые фичи */
+  if (!backButton.isSupported() || !miniApp.isSupported()) {
+    throw new Error('ERR_NOT_SUPPORTED');
+  }
 
+  /* 3. Монтируем необходимые скоупы */
+  if (themeParams.mount.isAvailable()) themeParams.mount();
+  if (miniApp.mount.isAvailable())     miniApp.mount();
+  if (backButton.mount.isAvailable())  backButton.mount();
 
-    backButton.mount();
-    miniApp.mount();
-    themeParams.mount();
-    if (settingsButton.mount.isAvailable()) {
-      settingsButton.mount();
-      settingsButton.show();
-    }
-    if (swipeBehavior.disableVertical.isAvailable()) {
-      swipeBehavior.disableVertical();
-      swipeBehavior.isVerticalEnabled(); // false
-}
-    initData.restore();
-    void viewport
-        .mount()
-        .catch(e => {
-            console.error('Something went wrong mounting the viewport', e);
-        })
-        .then(() => {
-            viewport.bindCssVars();
-        });
-    if (viewport.requestFullscreen.isAvailable()) {
-      viewport.requestFullscreen();
-      viewport.expand();
+  /* 4. Показываем Settings-кнопку, если можно */
+  if (settingsButton.show.isAvailable()) settingsButton.show();
 
-    }
+  /* 5. Отключаем вертикальный свайп (если доступно) */
+  swipeBehavior.disableVertical.ifAvailable?.();
 
-    // Define components-related CSS variables.
-    miniApp.bindCssVars();
-    themeParams.bindCssVars();
+  /* 6. Восстанавливаем initData */
+  initData.restore();
+
+  /* 7. Viewport + fullscreen */
+  if (viewport.mount.isAvailable()) {
+    await viewport.mount().catch(e =>
+      console.error('Viewport mount error:', e),
+    );
+    viewport.bindCssVars();
+  }
+
+  if (viewport.requestFullscreen.isAvailable()) {
+    await viewport.requestFullscreen();
+    /* expand() лучше вызывать уже в fullscreen */
+    viewport.expand.ifAvailable?.();
+  }
+
+  /* 8. Проброс CSS-переменных */
+  miniApp.bindCssVars.ifAvailable?.();
+  themeParams.bindCssVars.ifAvailable?.();
 }
