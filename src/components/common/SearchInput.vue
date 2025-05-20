@@ -26,7 +26,7 @@ function onInput(e: Event) {
 
 <style scoped>
 .search-input {
-  background-color: var(--tg-theme-secondary-bg-color);
+  background-color: var(--tg-theme-header-bg-color);
   color: var(--tg-theme-text-color);
   outline-color: var(--tg-theme-link-color);
 }

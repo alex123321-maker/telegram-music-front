@@ -37,7 +37,6 @@ const matchAllTags = ref(false)
   width: 20rem;
   display: flex;
   flex-direction: column;
-  background-color: var(--tg-theme-secondary-bg-color);
   color: var(--tg-theme-text-color);
 }
 

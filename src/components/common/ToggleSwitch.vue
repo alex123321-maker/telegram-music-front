@@ -1,4 +1,3 @@
-<!-- src/components/common/ToggleSwitch.vue -->
 <template>
   <div class="mode-switcher" @click.stop>
     <button
@@ -24,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 const props = defineProps<{
   modelValue: boolean
   offLabel?: string
@@ -36,10 +37,13 @@ const emit = defineEmits<{
 const offLabel = props.offLabel ?? 'Хоть один'
 const onLabel  = props.onLabel  ?? 'Все'
 
-// Цвета темы
-const btnColor       = 'var(--tg-theme-button-color)'
+// Цвет темы для underline и текста
+const btnColor      = 'var(--tg-theme-button-color)'
 const btnTextColor  = 'var(--tg-theme-button-text-color)'
 const subtitleColor = 'var(--tg-theme-subtitle-text-color)'
+
+// Подчёркивание всегда активного цвета
+const underlineActiveColor = btnColor
 
 function segStyle(active: boolean) {
   return {
@@ -48,10 +52,10 @@ function segStyle(active: boolean) {
   }
 }
 
-const underlineStyle = {
-  backgroundColor: btnColor,
+const underlineStyle = computed(() => ({
+  backgroundColor: underlineActiveColor,
   transform: `translateX(${props.modelValue ? 100 : 0}%)`,
-}
+}))
 </script>
 
 <style scoped>
@@ -59,7 +63,7 @@ const underlineStyle = {
   position: relative;
   display: flex;
   width: 100%;
-  border-bottom: 2px solid var(--tg-theme-section-separator-color);
+  border-bottom: 2px solid var(--tg-theme-header-bg-color);
 }
 
 .seg-btn {
@@ -70,7 +74,6 @@ const underlineStyle = {
   font-weight: 500;
   background: transparent;
   border: none;
-  outline: none;
   cursor: pointer;
   transition: color 0.2s ease;
   position: relative;
@@ -88,7 +91,7 @@ const underlineStyle = {
   width: 50%;
   height: 3px;
   border-radius: 2px 2px 0 0;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.3s ease;
   z-index: 0;
 }
 </style>

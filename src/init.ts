@@ -36,14 +36,13 @@ export function init(debug: boolean): void {
     themeParams.mount();
     initData.restore();
     void viewport
-    void viewport.mount()
-    .then(() => viewport.bindCssVars())
-    .then(async () => {
-      if (viewport.requestFullscreen.isAvailable()) {
-        await viewport.requestFullscreen();
-      }
-    })
-    .catch(console.error);
+        .mount()
+        .catch(e => {
+            console.error('Something went wrong mounting the viewport', e);
+        })
+        .then(() => {
+            viewport.bindCssVars();
+        });
     if (viewport.requestFullscreen.isAvailable()) {
       viewport.requestFullscreen();
     }

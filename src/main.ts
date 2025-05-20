@@ -1,13 +1,12 @@
 import './assets/index.css'
 
 import { createApp } from 'vue'
-import { retrieveLaunchParams } from '@telegram-apps/sdk-vue'
+import { retrieveLaunchParams, themeParams } from '@telegram-apps/sdk-vue'
 
 import App from './App.vue'
 import router from './router'
 import { errorHandler } from './errorHandler'
 import { init } from './init'
-import { publicUrl } from './helpers/publicUrl'
 
 // Mock the environment in case, we are outside Telegram.
 import './mockEnv'

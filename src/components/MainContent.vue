@@ -38,7 +38,7 @@ function onResolved(payload: typeof audio.value) {
 }
 
 const containerStyle = computed(() => ({
-  backgroundColor: 'var(--tg-theme-secondary-bg-color)',
+  backgroundColor: 'var(--tg--theme-bg-color)',
   color:           'var(--tg-theme-text-color)'
 }))
 </script>

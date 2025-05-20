@@ -1,8 +1,12 @@
-<!-- src/components/MainContent.vue -->
 <template>
-  <ul class="video-list">
+  <ul
+    v-show="videos.length || loading"
+    class="video-list"
+    @scroll.passive="handleScroll"
+    ref="listRef"
+  >
     <!-- Скелетон -->
-    <template v-if="loading">
+    <template v-if="loading && videos.length === 0">
       <li v-for="n in skeletonCount" :key="n" class="skeleton-item">
         <div class="skeleton-thumb"></div>
         <div class="skeleton-text">
@@ -31,10 +35,21 @@
         </div>
       </li>
     </template>
+
+    <!-- Прелоадер при догрузке -->
+    <li v-if="loading && videos.length > 0" class="skeleton-item">
+      <div class="skeleton-thumb"></div>
+      <div class="skeleton-text">
+        <div class="skeleton-line full"></div>
+        <div class="skeleton-line half"></div>
+      </div>
+    </li>
   </ul>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 interface VideoItem {
   id: { videoId: string }
   snippet: {
@@ -49,11 +64,26 @@ const props = defineProps<{
   loading: boolean
   skeletonCount?: number
 }>()
-defineEmits<{
+
+const emit = defineEmits<{
   (e: 'select', item: VideoItem): void
+  (e: 'scroll-bottom'): void
 }>()
 
+const listRef = ref<HTMLElement | null>(null)
 const skeletonCount = props.skeletonCount ?? 5
+
+function handleScroll() {
+  const el = listRef.value
+  if (!el) return
+
+  const threshold = 100 // пикселей до низа
+  const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - threshold
+
+  if (nearBottom) {
+    emit('scroll-bottom')
+  }
+}
 </script>
 
 <style scoped>
@@ -64,9 +94,14 @@ const skeletonCount = props.skeletonCount ?? 5
   gap: 0.75rem;
   max-width: 36rem;
   width: 100%;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: var(--tg-theme-section-bg-color);
+  scrollbar-width: thin; /* auto | thin | none */
+  scrollbar-color: var(--tg-theme-button-color) var(--tg-theme-bg-color);
+  max-height: 400px;
+  overflow-y: auto;
 }
-
-/* Скелетон */
 .skeleton-item {
   display: flex;
   align-items: start;
@@ -95,7 +130,6 @@ const skeletonCount = props.skeletonCount ?? 5
 .skeleton-line.full { width: 100%; }
 .skeleton-line.half { width: 50%; }
 
-/* Элементы видео */
 .video-item {
   display: flex;
   align-items: start;
@@ -103,10 +137,8 @@ const skeletonCount = props.skeletonCount ?? 5
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 0.5rem;
+  background-color: var(--tg-theme-secondary-background-color);
   transition: background-color 0.2s;
-}
-.video-item:hover {
-  background-color: var(--tg-theme-section-background-color);
 }
 .video-thumb {
   width: 6rem;
@@ -134,8 +166,25 @@ const skeletonCount = props.skeletonCount ?? 5
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.video-list::-webkit-scrollbar {
+  width: 8px;
+}
 
-/* Анимация пульсации для скелетона */
+.video-list::-webkit-scrollbar-track {
+  background: var(--tg-theme-bg-color, transparent); /* фон канала скролла */
+}
+
+.video-list::-webkit-scrollbar-thumb {
+  background-color: var(--tg-theme-button-color); /* цвет самого скроллбара */
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.video-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tg-theme-link-color);
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }

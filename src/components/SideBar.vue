@@ -46,7 +46,7 @@ onBeforeUnmount(() => {
 .sidebar-wrapper {
   min-height: 100vh;
   padding-bottom: 3.5rem; /* соответствует pb-14 */
-  background-color: var(--tg-theme-background-color);
+  background-color: var(--tg-theme-section-bg-color);
   border-right: 1px solid var(--tg-theme-section-separator-color);
 }
 </style>

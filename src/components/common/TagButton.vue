@@ -24,6 +24,8 @@ function handleClick() {
     emit('click', props.tag.tagID)
   }
 }
+props.tag.Name
+
 </script>
 
 <style scoped>
@@ -36,7 +38,7 @@ function handleClick() {
   font-size: 0.875rem;
   font-weight: 500;
   /* Цвета по умолчанию */
-  background-color: var(--tg-theme-secondary-bg-color);
+  background-color: var(--tg-theme-header-bg-color);
   color: var(--tg-theme-text-color);
   /* Анимация перехода */
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -45,7 +47,7 @@ function handleClick() {
 }
 
 .tag-button.active {
-  background-color: var(--tg-theme-button-color);
+  background-color: var(--tg-theme-link-color);
   color: var(--tg-theme-button-text-color);
 }
 

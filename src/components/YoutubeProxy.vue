@@ -1,4 +1,3 @@
-<!-- src/components/common/SearchYouTubeInput.vue -->
 <template>
   <div class="search-input-container">
     <h1 class="title">Найди или вставь ссылку на YouTube</h1>
@@ -39,6 +38,7 @@
       :videos="videos"
       :loading="searchLoading"
       @select="selectVideo"
+      @scroll-bottom="loadMoreVideos"
     />
   </div>
 </template>
@@ -60,11 +60,13 @@ interface VideoItem {
   }
 }
 
-const query = ref<string>('')
+const query = ref('')
+const currentQuery = ref('')
 const videos = ref<VideoItem[]>([])
+const nextPageToken = ref<string | null>(null)
 const error = ref<string | null>(null)
-const searchLoading = ref<boolean>(false)
-const resolveLoading = ref<boolean>(false)
+const searchLoading = ref(false)
+const resolveLoading = ref(false)
 
 const emit = defineEmits<{
   (e: 'resolved', payload: { src: string; artist: string; title: string; cover: string }): void
@@ -77,37 +79,46 @@ function looksLikeURL(str: string): boolean {
 
 async function handleSubmit() {
   if (!query.value.trim()) return
-  videos.value = []
   error.value = null
 
   if (looksLikeURL(query.value)) {
     await resolveVideo(query.value)
   } else {
-    await searchVideos(query.value)
+    await searchNewVideos(query.value)
   }
 }
 
-async function searchVideos(q: string) {
+async function searchNewVideos(q: string) {
+  videos.value = []
+  nextPageToken.value = null
+  currentQuery.value = q
+  await loadMoreVideos()
+}
+
+async function loadMoreVideos() {
+  if (searchLoading.value || !currentQuery.value) return
   searchLoading.value = true
-  emit('loading', true)
   try {
     const url = new URL('https://www.googleapis.com/youtube/v3/search')
     url.searchParams.set('part', 'snippet')
-    url.searchParams.set('q', q)
+    url.searchParams.set('q', currentQuery.value)
     url.searchParams.set('type', 'video')
     url.searchParams.set('maxResults', String(maxResults))
     url.searchParams.set('key', API_KEY)
+    if (nextPageToken.value) {
+      url.searchParams.set('pageToken', nextPageToken.value)
+    }
 
     const res = await fetch(url.toString())
     const json = await res.json()
     if (!res.ok) throw new Error(json.error?.message || 'Ошибка поиска')
 
-    videos.value = json.items
+    videos.value.push(...json.items)
+    nextPageToken.value = json.nextPageToken || null
   } catch (e: unknown) {
     error.value = e instanceof Error ? e.message : String(e)
   } finally {
     searchLoading.value = false
-    emit('loading', false)
   }
 }
 
@@ -143,7 +154,6 @@ function selectVideo(item: VideoItem) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1rem;
 }
 
 .title {
@@ -164,7 +174,7 @@ function selectVideo(item: VideoItem) {
   width: 100%;
   padding: 0.5rem 2.5rem 0.5rem 1rem;
   border-radius: 0.5rem;
-  background-color: var(--tg-theme-secondary-bg-color);
+  background-color: var(--tg-theme-header-bg-color);
   color: var(--tg-theme-text-color);
   border: none;
   outline: none;
@@ -182,7 +192,7 @@ function selectVideo(item: VideoItem) {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--tg-theme-button-text-color);
+  color: var(--tg-theme-section-header-text-color);
 }
 .icon-button:disabled {
   opacity: 0.6;
