@@ -12,6 +12,7 @@
         :disabled="searchLoading || resolveLoading"
       />
       <button
+      title="Поиск"
         @click="handleSubmit"
         class="icon-button"
         :disabled="searchLoading || resolveLoading"
