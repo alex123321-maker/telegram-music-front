@@ -1,15 +1,16 @@
 <template>
   <div
     class="flex box-border h-dvh"
-    style="padding-top: var(--tg-viewport-content-safe-area-inset-top);"
+    style="padding-top: var(--tg-viewport-content-safe-area-inset-top);
+    padding-bottom: var(--tg-viewport-content-safe-area-inset-bottom);
+    max-height: var(--tg-viewport-stable-height);
+
+    "
 
   >
     <Sidebar @toggle="isSidebarOpen = $event" />
 
     <main
-    style="padding-top: var(--tg-viewport-content-safe-area-inset-top);
-    padding-bottom: var(--tg-viewport-content-safe-area-inset-bottom);
-    "
       class="flex-1 h-full transition-all duration-300 relative overflow-hidden"
     >
       <MainContent />
@@ -33,11 +34,12 @@ import SettingsModal from '@/components/SettingsModal.vue'
 /* состояние окна настроек */
 const isSettingsOpen = ref(false)
 function openSettings() {
+  console.log("OPEN SETTINGS")
   isSettingsOpen.value = true
 }
 
 /* ——— подписка на кнопку Telegram ——— */
-let detach: (() => void) | null = null   // сюда сохраним «отписку»
+let detach: (() => void) | null = null
 
 onMounted(() => {
   if (onSettingsButtonClick.isAvailable()) {
