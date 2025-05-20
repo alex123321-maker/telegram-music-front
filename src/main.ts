@@ -7,7 +7,6 @@ import App from './App.vue'
 import router from './router'
 import { errorHandler } from './errorHandler'
 import { init } from './init'
-import { TonConnectUIPlugin } from './tonconnect'
 import { publicUrl } from './helpers/publicUrl'
 
 // Mock the environment in case, we are outside Telegram.
@@ -19,5 +18,4 @@ init(retrieveLaunchParams().startParam === 'debug' || import.meta.env.DEV)
 const app = createApp(App)
 app.config.errorHandler = errorHandler
 app.use(router)
-app.use(TonConnectUIPlugin, { manifestUrl: publicUrl('tonconnect-manifest.json') })
 app.mount('#app')
