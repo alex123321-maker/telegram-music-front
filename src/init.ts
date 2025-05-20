@@ -32,8 +32,8 @@ export function init(debug: boolean): void {
     if (!backButton.isSupported() || !miniApp.isSupported()) {
         throw new Error('ERR_NOT_SUPPORTED');
     }
+    viewport.mount();}
 if (viewport.mount.isAvailable()) {
-  viewport.mount();}
     if (viewport.expand.isAvailable()) {
       viewport.expand();
 }
