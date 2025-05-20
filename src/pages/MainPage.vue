@@ -58,7 +58,7 @@ const insets = useSignal(viewport.safeAreaInsets)
 
 const safeAreaStyle = computed(() => {
   const { top, right, bottom, left } = insets.value
-  return { padding: `${top}px ${bottom}px ${right}px ${left}px` }
+  return { padding: `${top}px ${right}px ${bottom}px ${left}px` }
 })
 const safeAreaSidebarStyle = computed(() => {
   const { top, right, bottom, left } = insets.value
