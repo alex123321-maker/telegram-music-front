@@ -1,24 +1,27 @@
 <template>
-  <div
-    class="my-4"
-  >
-    <h3
-      v-if="title"
-      class="text-lg font-semibold mb-2"
-      :style="{ color: themeParams.textColor() }"
-    >
+  <div class="my-section my-4">
+    <h3 v-if="title" class="section-title text-lg font-semibold mb-2">
       {{ title }}
     </h3>
-    <div :style="{ color: themeParams.textColor() }">
+    <div class="section-content">
       <slot />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { themeParams } from '@telegram-apps/sdk-vue'
-
-const props = defineProps<{
-  title?: string
-}>()
+defineProps<{ title?: string }>()
 </script>
+
+<style scoped>
+.my-section {
+  /* Отступ снизу */
+  margin-bottom: 1rem;
+}
+
+.section-title,
+.section-content {
+  /* Цвет текста из темы Telegram Mini App */
+  color: var(--tg-theme-text-color);
+}
+</style>

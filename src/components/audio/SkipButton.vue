@@ -2,35 +2,40 @@
   <button
     @click="onClick"
     :disabled="props.disabled"
-    class="p-2 rounded-full transition"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
-    :style="buttonStyle"
+    class="skip-button"
   >
     <slot />
   </button>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
-
-
 const props = defineProps<{ disabled?: boolean }>()
-const emit = defineEmits(['skip'])
-const isHovered = ref(false)
+const emit  = defineEmits<{
+  (e: 'skip'): void
+}>()
 
 function onClick() {
   if (!props.disabled) emit('skip')
 }
-
-const buttonStyle = computed(() => ({
-  backgroundColor:
-    isHovered.value && !props.disabled
-      ? themeParams.secondaryBackgroundColor()
-      : 'transparent',
-  color: props.disabled
-    ? themeParams.hintColor()
-    : themeParams.textColor(),
-}))
 </script>
+
+<style scoped>
+.skip-button {
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background-color: transparent;
+  color: var(--tg-theme-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skip-button:not(:disabled):hover {
+  background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.skip-button:disabled {
+  color: var(--tg-theme-hint-color);
+}
+</style>

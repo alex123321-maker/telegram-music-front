@@ -1,5 +1,6 @@
+<!-- src/components/SideBar.vue -->
 <template>
-  <div :style="wrapperStyle" class="min-h-screen pb-14">
+  <div class="sidebar-wrapper">
     <SideBarMobile
       v-if="isMobile"
       :is-open="isOpen"
@@ -10,8 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import SideBarMobile from '@/components/SideBarMobile.vue'
 import SideBarDesktop from '@/components/SideBarDesktop.vue'
 
@@ -36,20 +36,17 @@ onMounted(() => {
   updateIsMobile()
   window.addEventListener('resize', updateIsMobile)
 })
+
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateIsMobile)
 })
-
-// Динамический фон по теме
-const wrapperStyle = computed(() => ({
-  backgroundColor: themeParams.backgroundColor(),
-  borderRight:      `1px solid ${themeParams.sectionSeparatorColor()}`
-
-}))
 </script>
 
 <style scoped>
-.min-h-screen {
+.sidebar-wrapper {
   min-height: 100vh;
+  padding-bottom: 3.5rem; /* соответствует pb-14 */
+  background-color: var(--tg-theme-background-color);
+  border-right: 1px solid var(--tg-theme-section-separator-color);
 }
 </style>

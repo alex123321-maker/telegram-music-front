@@ -1,4 +1,4 @@
-<!-- AudioPlayer.vue -->
+<!-- src/components/AudioPlayer.vue -->
 <template>
   <component
     :is="isMobile ? AudioPlayerMobile : AudioPlayerDesktop"
@@ -11,6 +11,9 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import AudioPlayerMobile from '@/components/AudioPlayerMobile.vue'
 import AudioPlayerDesktop from '@/components/AudioPlayerDesktop.vue'
 
+/**
+ * Обёртка-плеер, переключает мобильный и десктопный интерфейс
+ */
 type Props = {
   src: string
   cover: string
@@ -22,7 +25,8 @@ type Props = {
 const props = defineProps<Props>()
 const isMobile = ref(false)
 
-const updateIsMobile = () => {
+// Определяем мобильный режим по ширине окна
+function updateIsMobile() {
   isMobile.value = window.innerWidth < 768
 }
 
@@ -36,3 +40,6 @@ onBeforeUnmount(() => {
 })
 </script>
 
+<style scoped>
+/* В этом компоненте специфичных стилей нет */
+</style>

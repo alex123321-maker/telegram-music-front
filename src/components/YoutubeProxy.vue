@@ -1,40 +1,40 @@
+<!-- src/components/common/SearchYouTubeInput.vue -->
 <template>
-  <div :style="containerStyle" class="w-full flex flex-col items-center px-4">
-    <h1 class="text-2xl font-bold mb-4" :style="titleStyle">
-      Найди или вставь ссылку на YouTube
-    </h1>
+  <div class="search-input-container">
+    <h1 class="title">Найди или вставь ссылку на YouTube</h1>
 
-    <!-- Единый инпут с иконкой -->
-    <div class="w-full max-w-md relative mb-4">
+    <div class="input-wrapper">
       <input
         v-model="query"
         type="text"
         placeholder="Ссылка или поисковый запрос"
-        class="w-full px-4 py-2 rounded-lg pr-10"
-        :style="inputStyle"
+        class="input-field"
         @keydown.enter.prevent="handleSubmit"
         :disabled="searchLoading || resolveLoading"
       />
       <button
         @click="handleSubmit"
-        class="absolute inset-y-0 right-0 flex items-center pr-3"
-        :style="buttonIconStyle"
+        class="icon-button"
         :disabled="searchLoading || resolveLoading"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-             fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round"
-             viewBox="0 0 24 24">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
       </button>
     </div>
 
-    <!-- Сообщения -->
-    <p v-if="error" class="mt-2" :style="errorStyle">{{ error }}</p>
+    <p v-if="error" class="error-msg">{{ error }}</p>
 
-    <!-- Компонент списка видео: скелетон только во время searchLoading -->
     <VideoList
       :videos="videos"
       :loading="searchLoading"
@@ -44,8 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
+import { ref } from 'vue'
 import { resolveYouTubeVideo } from '@/api/resolve'
 import VideoList from '@/components/SearchResult.vue'
 
@@ -61,24 +60,11 @@ interface VideoItem {
   }
 }
 
-const query         = ref<string>('')
-const videos        = ref<VideoItem[]>([])
-const error         = ref<string | null>(null)
+const query = ref<string>('')
+const videos = ref<VideoItem[]>([])
+const error = ref<string | null>(null)
 const searchLoading = ref<boolean>(false)
 const resolveLoading = ref<boolean>(false)
-
-const containerStyle  = computed(() => ({
-  color          : themeParams.textColor()
-}))
-const titleStyle      = computed(() => ({ color: themeParams.accentTextColor() }))
-const inputStyle      = computed(() => ({
-  backgroundColor: themeParams.backgroundColor(),
-  color          : themeParams.textColor(),
-  outline        : 'none',       // всегда нет outline
-  boxShadow      : 'none'
-}))
-const buttonIconStyle = computed(() => ({ color: themeParams.buttonTextColor() }))
-const errorStyle      = computed(() => ({ color: themeParams.destructiveTextColor() }))
 
 const emit = defineEmits<{
   (e: 'resolved', payload: { src: string; artist: string; title: string; cover: string }): void
@@ -91,8 +77,6 @@ function looksLikeURL(str: string): boolean {
 
 async function handleSubmit() {
   if (!query.value.trim()) return
-
-  // сбросим предыдущие результаты/ошибки
   videos.value = []
   error.value = null
 
@@ -105,6 +89,7 @@ async function handleSubmit() {
 
 async function searchVideos(q: string) {
   searchLoading.value = true
+  emit('loading', true)
   try {
     const url = new URL('https://www.googleapis.com/youtube/v3/search')
     url.searchParams.set('part', 'snippet')
@@ -113,7 +98,7 @@ async function searchVideos(q: string) {
     url.searchParams.set('maxResults', String(maxResults))
     url.searchParams.set('key', API_KEY)
 
-    const res  = await fetch(url.toString())
+    const res = await fetch(url.toString())
     const json = await res.json()
     if (!res.ok) throw new Error(json.error?.message || 'Ошибка поиска')
 
@@ -127,35 +112,90 @@ async function searchVideos(q: string) {
 }
 
 async function resolveVideo(link: string) {
-  // отдельный флаг, не трогаем searchLoading и не эмитим туда
   resolveLoading.value = true
   emit('loading', true)
-
   try {
     const data = await resolveYouTubeVideo(link)
     if (!('audio_url' in data)) throw new Error('Не удалось получить ссылку на аудио')
 
     emit('resolved', {
-      src   : data.audio_url,
+      src: data.audio_url,
       artist: data.artist || '—',
-      title : data.title,
-      cover : data.thumbnail_url || ''
+      title: data.title,
+      cover: data.thumbnail_url || ''
     })
   } catch (e: unknown) {
     error.value = e instanceof Error ? e.message : String(e)
   } finally {
     resolveLoading.value = false
-  emit('loading', false)
-
+    emit('loading', false)
   }
 }
 
 function selectVideo(item: VideoItem) {
-  const link = `https://www.youtube.com/watch?v=${item.id.videoId}`
-  resolveVideo(link)
+  resolveVideo(`https://www.youtube.com/watch?v=${item.id.videoId}`)
 }
 </script>
 
 <style scoped>
-/* Tailwind + themeParams покрывают всё */
+.search-input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--tg-theme-accent-text-color);
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+  margin-bottom: 1rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--tg-theme-secondary-bg-color);
+  color: var(--tg-theme-text-color);
+  border: none;
+  outline: none;
+}
+.input-field:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.icon-button {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--tg-theme-button-text-color);
+}
+.icon-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.error-msg {
+  margin-top: 0.5rem;
+  color: var(--tg-theme-destructive-text-color);
+}
 </style>

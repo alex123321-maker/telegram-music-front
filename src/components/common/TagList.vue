@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex flex-wrap gap-2"
-  >
+  <div class="tag-list">
     <TagButton
       v-for="t in tags"
       :key="t.tagID"
@@ -22,13 +20,8 @@ interface Tag {
   Name: string
 }
 
-const props = defineProps<{
-  modelValue: number[]
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: number[]): void
-}>()
+const props = defineProps<{ modelValue: number[] }>()
+const emit  = defineEmits<{ (e: 'update:modelValue', value: number[]): void }>()
 
 const tags = ref<Tag[]>([])
 
@@ -38,14 +31,19 @@ onMounted(async () => {
 
 function toggleTag(tag_id: number) {
   const index = props.modelValue.indexOf(tag_id)
-  const next = [...props.modelValue]
+  const next  = [...props.modelValue]
 
-  if (index === -1) {
-    next.push(tag_id)
-  } else {
-    next.splice(index, 1)
-  }
+  if (index === -1) next.push(tag_id)
+  else next.splice(index, 1)
 
   emit('update:modelValue', next)
 }
 </script>
+
+<style scoped>
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+</style>

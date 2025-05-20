@@ -1,13 +1,13 @@
+<!-- src/components/audio/PlayPauseButton.vue -->
 <template>
   <button
     @click="emit('toggle')"
-    class="p-2 rounded-full"
-    :style="buttonStyle"
+    :class="['play-pause-button', { playing: props.isPlaying }]"
   >
     <svg
       v-if="!props.isPlaying"
       xmlns="http://www.w3.org/2000/svg"
-      class="h-6 w-6"
+      class="icon"
       fill="currentColor"
       viewBox="0 0 24 24"
     >
@@ -16,7 +16,7 @@
     <svg
       v-else
       xmlns="http://www.w3.org/2000/svg"
-      class="h-6 w-6"
+      class="icon"
       fill="currentColor"
       viewBox="0 0 24 24"
     >
@@ -26,32 +26,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
-
 const props = defineProps<{ isPlaying: boolean }>()
-const emit = defineEmits(['toggle'])
-
-const buttonStyle = computed(() => {
-  const base = {
-    transition: 'all 0.3s ease-in-out',
-    transform: props.isPlaying ? 'scale(1.1)' : 'scale(1)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-  if (props.isPlaying) {
-    return {
-      ...base,
-      backgroundColor: themeParams.buttonColor(),
-      color: themeParams.buttonTextColor(),
-    }
-  } else {
-    return {
-      ...base,
-      backgroundColor: themeParams.secondaryBackgroundColor(),
-      color: themeParams.textColor(),
-    }
-  }
-})
+// Определяем emit через сигнатуру, а не через массив
+const emit = defineEmits<{
+  (e: 'toggle'): void
+}>()
 </script>
+
+<style scoped>
+.play-pause-button {
+  padding: 0.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--tg-theme-secondary-bg-color);
+  color:           var(--tg-theme-text-color);
+
+  transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+  transform:  scale(1);
+}
+
+.play-pause-button.playing {
+  background-color: var(--tg-theme-button-color);
+  color:            var(--tg-theme-button-text-color);
+  transform:        scale(1.1);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+</style>

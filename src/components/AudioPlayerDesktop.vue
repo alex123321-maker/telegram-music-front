@@ -1,9 +1,10 @@
+<!-- src/components/AudioPlayer.vue -->
 <template>
-  <div class="w-full">
+  <div class="audio-player w-full">
     <!-- Теги песни -->
     <MediaTagBar :media_id="media_id" />
 
-    <!-- Прогресс-бар с возможностью тащить мышью -->
+    <!-- Прогресс-бар -->
     <SeekBar
       v-model:progress="progress"
       :duration="duration"
@@ -11,19 +12,16 @@
       @end="resumeLoop"
     />
 
-    <!-- Основная панель управления (шире, чем на телефоне) -->
-    <div
-      class="max-w-5xl mx-auto flex items-center justify-between pt-3"
-      :style="{ backgroundColor: themeParams.bottomBarBgColor() }"
-    >
+    <!-- Нижняя панель управления -->
+    <div class="bottom-bar max-w-5xl mx-auto flex items-center justify-between pt-3">
       <!-- Кнопки навигации и Play/Pause -->
-      <div class="flex items-center gap-2">
+      <div class="controls flex items-center gap-2">
         <SkipButton direction="prev" @click="prevTrack">
           <svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
             <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
           </svg>
         </SkipButton>
-        <PlayPauseButton :is-playing="isPlaying" @click="togglePlay" />
+        <PlayPauseButton :is-playing="isPlaying" @toggle="togglePlay" />
         <SkipButton direction="next" @click="nextTrack">
           <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24">
             <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
@@ -33,7 +31,7 @@
 
       <!-- Инфо о треке -->
       <TrackInfo
-        class="flex-1 px-4"
+        class="track-info flex-1 px-4"
         :cover="props.cover"
         :title="props.title"
         :artist="props.artist"
@@ -53,7 +51,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Howl } from 'howler'
-import { themeParams } from '@telegram-apps/sdk-vue'
 
 import MediaTagBar     from '@/components/audio/MediaTagBar.vue'
 import SeekBar         from '@/components/audio/SeekBar.vue'
@@ -64,7 +61,6 @@ import VolumeControl   from '@/components/audio/VolumeControl.vue'
 
 const media_id = 6
 
-/** Входные пропсы */
 type Props = {
   src: string
   cover: string
@@ -75,9 +71,8 @@ type Props = {
 }
 const props = defineProps<Props>()
 
-// *** Состояние ***
-const progress      = ref(0) // 0–100 %
-const duration      = ref(0) // сек
+const progress      = ref(0)
+const duration      = ref(0)
 const displayedTime = ref('00:00')
 const isPlaying     = ref(false)
 const volume        = ref(1)
@@ -86,85 +81,62 @@ const isMuted       = ref(false)
 let sound: Howl
 let rafId = 0
 
-// формируем MM:SS
 function formatTime(sec: number) {
-  const m = Math.floor(sec / 60)
-  const s = Math.floor(sec % 60).toString().padStart(2, '0')
+  const m = Math.floor(sec/60)
+  const s = Math.floor(sec%60).toString().padStart(2,'0')
   return `${m}:${s}`
 }
 
-/** Переключение Play/Pause */
 function togglePlay() {
   if (!sound) return
-  if (isPlaying.value) sound.pause()
-  else sound.play()
+  if(isPlaying.value){ sound.pause()}else {sound.play()}
 }
 
-// *** Seek-логика ***
 function pauseLoop() {
   cancelAnimationFrame(rafId)
 }
+
 function resumeLoop() {
   if (!sound) return
-  const newPos = (progress.value / 100) * (sound.duration() || 0)
-  sound.seek(newPos)
+  sound.seek((progress.value/100) * (sound.duration()||0))
   rafLoop()
 }
 
-// *** RAF-обновление прогресса ***
 function updateProgress() {
   if (!sound) return
   const cur = (sound.seek() as number) || 0
   const dur = sound.duration() || 0
-  progress.value = dur > 0 ? (cur / dur) * 100 : 0
+  progress.value = dur>0 ? (cur/dur)*100 : 0
   duration.value = dur
   displayedTime.value = formatTime(cur)
 }
+
 function rafLoop() {
   updateProgress()
   rafId = requestAnimationFrame(rafLoop)
 }
 
-// *** Громкость ***
 function onVolumeChange(v: number) {
   volume.value = v
   sound.volume(v)
 }
-// Теперь `toggleMute` принимает payload: true = вмикнуть «мут», false = выключить
+
 function toggleMute(muted: boolean) {
   isMuted.value = muted
   sound.volume(muted ? 0 : volume.value)
 }
 
-// заглушки для prev/next
-function prevTrack() { /* TODO */ }
-function nextTrack() { /* TODO */ }
+function prevTrack() {}
+function nextTrack() {}
 
-// *** Инициализируем Howler ***
 onMounted(() => {
   sound = new Howl({
-    src: [props.src],
-    html5: true,
-    preload: true,
-    autoplay: props.autoplay ?? false,
-    loop: props.loop ?? false,
-    volume: volume.value,
-    onload: () => {
-      duration.value = sound.duration() || 0
-    },
-    onplay: () => {
-      isPlaying.value = true
-      rafLoop()
-    },
-    onpause: () => {
-      isPlaying.value = false
-      cancelAnimationFrame(rafId)
-    },
-    onend: () => {
-      isPlaying.value = false
-      progress.value  = 0
-      cancelAnimationFrame(rafId)
-    }
+    src: [props.src], html5: true, preload: true,
+    autoplay: props.autoplay||false, loop: props.loop||false, volume: volume.value,
+    onload: () => duration.value = sound.duration()||0,
+    onplay: () => { isPlaying.value = true; rafLoop() },
+    onpause: () => { isPlaying.value = false; cancelAnimationFrame(rafId) },
+    onend: () => { isPlaying.value=false; progress.value=0; cancelAnimationFrame(rafId) }
   })
 })
 
@@ -175,5 +147,19 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* ПК-специфические доработки, если понадобятся */
+.audio-player {
+  width: 100%;
+}
+
+.bottom-bar {
+  background-color: var(--tg-theme-bottom-bar-bg-color);
+}
+
+.controls {
+  /* можно добавить gap через переменную, оставим компоновку */
+}
+
+.track-info {
+  /* отступы заданы через классы */
+}
 </style>

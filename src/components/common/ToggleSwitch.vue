@@ -1,10 +1,11 @@
+<!-- src/components/common/ToggleSwitch.vue -->
 <template>
   <div class="mode-switcher" @click.stop>
     <button
       type="button"
       class="seg-btn"
       :class="{ 'is-active': !modelValue }"
-      @click="() => $emit('update:modelValue', false)"
+      @click="() => emit('update:modelValue', false)"
       :style="segStyle(!modelValue)"
     >
       {{ offLabel }}
@@ -13,7 +14,7 @@
       type="button"
       class="seg-btn"
       :class="{ 'is-active': modelValue }"
-      @click="() => $emit('update:modelValue', true)"
+      @click="() => emit('update:modelValue', true)"
       :style="segStyle(modelValue)"
     >
       {{ onLabel }}
@@ -23,9 +24,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
-
 const props = defineProps<{
   modelValue: boolean
   offLabel?: string
@@ -35,28 +33,25 @@ const emit = defineEmits<{
   (e: 'update:modelValue', v: boolean): void
 }>()
 
-const offLabel = computed(() => props.offLabel ?? 'Хоть один')
-const onLabel  = computed(() => props.onLabel  ?? 'Все')
+const offLabel = props.offLabel ?? 'Хоть один'
+const onLabel  = props.onLabel  ?? 'Все'
 
-// Заберём цвета темы один раз
-const btnColor  = themeParams.buttonColor()
-const btnText   = themeParams.buttonTextColor()
-const textMain  = themeParams.subtitleTextColor()
+// Цвета темы
+const btnColor       = 'var(--tg-theme-button-color)'
+const btnTextColor  = 'var(--tg-theme-button-text-color)'
+const subtitleColor = 'var(--tg-theme-subtitle-text-color)'
 
-
-// Общий стиль для каждой кнопки
 function segStyle(active: boolean) {
   return {
     backgroundColor: 'transparent',
-    color: active ? btnText : textMain,
+    color: active ? btnTextColor : subtitleColor,
   }
 }
 
-// Стиль для скользящей линии
-const underlineStyle = computed(() => ({
+const underlineStyle = {
   backgroundColor: btnColor,
   transform: `translateX(${props.modelValue ? 100 : 0}%)`,
-}))
+}
 </script>
 
 <style scoped>
@@ -64,12 +59,11 @@ const underlineStyle = computed(() => ({
   position: relative;
   display: flex;
   width: 100%;
-  border-bottom: 2px solid var(--underline-inactive, transparent);
+  border-bottom: 2px solid var(--tg-theme-section-separator-color);
 }
 
 .seg-btn {
   flex: 1;
-  /* убрали паддинг целиком */
   padding: 0;
   height: 2.5rem;
   font-size: 0.875rem;
@@ -78,10 +72,15 @@ const underlineStyle = computed(() => ({
   border: none;
   outline: none;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
-/* скользящая подчёркивающая линия */
+.seg-btn.is-active {
+  font-weight: 700;
+}
+
 .seg-underline {
   position: absolute;
   bottom: 0;
@@ -91,10 +90,5 @@ const underlineStyle = computed(() => ({
   border-radius: 2px 2px 0 0;
   transition: transform 0.3s ease, background-color 0.3s ease;
   z-index: 0;
-}
-
-/* Активный текст чуть жирнее */
-.seg-btn.is-active {
-  font-weight: 700;
 }
 </style>

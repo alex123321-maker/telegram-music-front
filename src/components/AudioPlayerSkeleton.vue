@@ -1,36 +1,81 @@
+<!-- src/components/AudioPlayerSkeleton.vue -->
 <template>
-  <!-- Скелетон плеера: повторяет финальную вёрстку -->
-  <div
-    class="w-full px-4 py-2 animate-pulse"
-    :style="{ backgroundColor: themeParams.backgroundColor() }"
-  >
+  <div class="audio-player-skeleton animate-pulse">
     <!-- полоска прогресса -->
-    <div class="h-1.5 rounded bg-gray-500/30 w-full mb-2" />
+    <div class="skeleton-progress mb-2" />
 
     <!-- основная линия управления -->
-    <div class="flex items-center gap-3">
-      <!-- prev / play / next -->
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-gray-500/30 rounded-full" />
-        <div class="w-10 h-10 bg-gray-500/30 rounded-full" />
-        <div class="w-8 h-8 bg-gray-500/30 rounded-full" />
+    <div class="skeleton-controls flex items-center gap-3">
+      <div class="skeleton-btn-group flex items-center gap-2">
+        <div class="skeleton-circle-small" />
+        <div class="skeleton-circle-medium" />
+        <div class="skeleton-circle-small" />
       </div>
 
-      <!-- обложка -->
-      <div class="w-12 h-12 bg-gray-500/30 rounded" />
+      <div class="skeleton-cover rounded" />
 
-      <!-- текст -->
-      <div class="flex-1 space-y-1">
-        <div class="h-4 bg-gray-500/30 rounded w-2/3" />
-        <div class="h-3 bg-gray-500/30 rounded w-1/3" />
+      <div class="skeleton-text flex-1 space-y-1">
+        <div class="skeleton-line w-2/3" />
+        <div class="skeleton-line w-1/3" />
       </div>
 
-      <!-- громкость -->
-      <div class="w-8 h-8 bg-gray-500/30 rounded-full" />
+      <div class="skeleton-circle-small" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { themeParams } from '@telegram-apps/sdk-vue'
+// Только визуальный скелетон
 </script>
+
+<style scoped>
+.audio-player-skeleton {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: var(--tg-theme-background-color);
+}
+
+.skeleton-progress {
+  height: 0.375rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  background-color: var(--tg-theme-section-separator-color);
+}
+
+.skeleton-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.skeleton-btn-group > div,
+.skeleton-circle-small,
+.skeleton-circle-medium,
+.skeleton-cover,
+.skeleton-line {
+  background-color: var(--tg-theme-section-separator-color);
+}
+
+.skeleton-circle-small {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+}
+
+.skeleton-circle-medium {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+}
+
+.skeleton-cover {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.375rem;
+}
+
+.skeleton-text .skeleton-line {
+  height: 0.875rem;
+  border-radius: 0.375rem;
+}
+</style>

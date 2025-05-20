@@ -4,16 +4,12 @@
     :value="modelValue"
     @input="onInput"
     :placeholder="placeholder"
-    class="w-full px-3 py-2 rounded focus:outline-none"
-    :style="inputStyle"
+    class="search-input w-full px-3 py-2 rounded focus:outline-none"
   />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
-
-const props = defineProps<{
+defineProps<{
   modelValue: string
   placeholder?: string
 }>()
@@ -23,18 +19,22 @@ const emit = defineEmits<{
 }>()
 
 function onInput(e: Event) {
-  const target = e.target as HTMLInputElement | null
-  if (!target) return
+  const target = e.target as HTMLInputElement
   emit('update:modelValue', target.value)
 }
-
-// Динамические стили из темы
-const inputStyle = computed(() => ({
-  backgroundColor: themeParams.secondaryBackgroundColor(),
-  color: themeParams.textColor(),
-  '::placeholder': {
-    color: themeParams.hintColor()
-  },
-  outlineColor: themeParams.linkColor(),
-}))
 </script>
+
+<style scoped>
+.search-input {
+  background-color: var(--tg-theme-secondary-bg-color);
+  color: var(--tg-theme-text-color);
+  outline-color: var(--tg-theme-link-color);
+}
+.search-input::placeholder {
+  color: var(--tg-theme-hint-color);
+}
+.search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+</style>

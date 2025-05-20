@@ -1,19 +1,21 @@
 <template>
   <div
     ref="bar"
-    class="h-2 cursor-pointer relative shadow-md"
-    :style="{ backgroundColor: trackBg }"
+    class="seek-bar h-2 cursor-pointer relative shadow-md bg-track"
     @mousedown.prevent="startDrag"
     @touchstart.prevent="startDrag"
   >
+    <!-- Заполненная часть -->
     <div
-      class="h-full"
-      :style="{ width: internalProgress + '%', backgroundColor: fillColor }"
+      class="h-full bg-fill"
+      :style="{ width: internalProgress + '%' }"
     />
+
+    <!-- Попап с временем -->
     <div
       v-if="dragging"
-      class="absolute -top-6 text-xs whitespace-nowrap transform -translate-x-1/2"
-      :style="{ left: internalProgress + '%', color: textColor }"
+      class="seek-popup absolute -top-6 text-xs whitespace-nowrap transform -translate-x-1/2"
+      :style="{ left: internalProgress + '%' }"
     >
       {{ formattedTime }}
     </div>
@@ -22,7 +24,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
-import { themeParams } from '@telegram-apps/sdk-vue'
 
 /** Входные пропсы */
 const props = defineProps<{
@@ -32,7 +33,7 @@ const props = defineProps<{
   duration: number
 }>()
 
-/** Эвенты */
+/** События */
 const emit = defineEmits<{
   /** v-model:progress */
   (e: 'update:progress', v: number): void
@@ -42,28 +43,20 @@ const emit = defineEmits<{
   (e: 'end'): void
 }>()
 
-// локальный прогресс
+// внутренний прогресс
 const internalProgress = ref(props.progress)
-// если прогресс меняется извне и мы не в драге — синхронизируем
 watch(() => props.progress, v => {
   if (!dragging.value) internalProgress.value = v
 })
 
-// тема
-const trackBg   = computed(() => themeParams.secondaryBackgroundColor())
-const fillColor = computed(() => themeParams.buttonColor())
-const textColor = computed(() => themeParams.textColor())
-
 // DOM-элемент бара
-const bar = ref<HTMLElement|null>(null)
-
-// expose, если кому-то нужен bar, но сейчас не нужен
+const bar = ref<HTMLElement | null>(null)
 defineExpose({ bar })
 
 // флаг «перетаскиваем»
 const dragging = ref(false)
 
-function startDrag(e: MouseEvent|TouchEvent) {
+function startDrag(e: MouseEvent | TouchEvent) {
   dragging.value = true
   emit('start')
   window.addEventListener('mousemove', onDrag)
@@ -73,7 +66,7 @@ function startDrag(e: MouseEvent|TouchEvent) {
   onDrag(e)
 }
 
-function onDrag(e: MouseEvent|TouchEvent) {
+function onDrag(e: MouseEvent | TouchEvent) {
   if (!dragging.value || !bar.value) return
   const x = 'touches' in e && e.touches.length
     ? e.touches[0].clientX
@@ -97,9 +90,9 @@ function endDrag() {
 
 // для попапа времени
 const formattedTime = computed(() => {
-  const sec = Math.round((internalProgress.value/100) * props.duration)
-  const m = Math.floor(sec/60)
-  const s = (sec%60).toString().padStart(2,'0')
+  const sec = Math.round((internalProgress.value / 100) * props.duration)
+  const m = Math.floor(sec / 60)
+  const s = (sec % 60).toString().padStart(2, '0')
   return `${m}:${s}`
 })
 
@@ -110,3 +103,25 @@ onBeforeUnmount(() => {
   window.removeEventListener('touchend',  endDrag)
 })
 </script>
+
+<style scoped>
+.seek-bar {
+  /* Радиус скругления можно настроить по вкусу */
+  border-radius: 0.25rem;
+}
+
+/* Цвет фона бара */
+.bg-track {
+  background-color: var(--tg-theme-secondary-bg-color);
+}
+
+/* Цвет заполненной части */
+.bg-fill {
+  background-color: var(--tg-theme-button-color);
+}
+
+/* Попап с текстом времени */
+.seek-popup {
+  color: var(--tg-theme-text-color);
+}
+</style>
