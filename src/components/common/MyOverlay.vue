@@ -2,7 +2,7 @@
   <transition name="fade">
     <div
       v-if="visible"
-      class="overlay fixed inset-0 z-30"
+      class="overlay"
       @click="$emit('click')"
     />
   </transition>
@@ -10,28 +10,24 @@
 
 <script setup lang="ts">
 defineProps<{ visible: boolean }>()
-defineEmits<{
-  (e: 'click'): void
-}>()
+defineEmits<{ (e: 'click'): void }>()
 </script>
 
 <style scoped>
 .overlay {
-  /* Фоновый цвет из темы с полупрозрачностью */
-  background-color: var(--tg-theme-section-bg-color);
-  opacity: 0.5;
+  position: fixed;
+  inset: 0;
+  z-index: 20;               /* ниже сайдбара, но выше контента */
+  background: var(--overlay);/* полупрозрачный цвет из темы */
 }
 
+/* анимация появления/исчезновения */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.4s ease;
+  transition: opacity .4s ease;
 }
 .fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+.fade-leave-to   { opacity: 0;   }
 .fade-enter-to,
-.fade-leave-from {
-  opacity: 0.5;
-}
+.fade-leave-from { opacity: 1;   }
 </style>

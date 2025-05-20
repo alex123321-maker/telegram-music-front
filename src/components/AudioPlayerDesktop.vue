@@ -1,10 +1,9 @@
-<!-- src/components/AudioPlayer.vue -->
 <template>
   <div class="audio-player w-full">
-    <!-- Теги песни -->
+    <!-- Теги трека -->
     <MediaTagBar :media_id="media_id" />
 
-    <!-- Прогресс-бар -->
+    <!-- Прогресс -->
     <SeekBar
       v-model:progress="progress"
       :duration="duration"
@@ -12,16 +11,18 @@
       @end="resumeLoop"
     />
 
-    <!-- Нижняя панель управления -->
+    <!-- Нижняя панель -->
     <div class="bottom-bar max-w-5xl mx-auto flex items-center justify-between pt-3">
-      <!-- Кнопки навигации и Play/Pause -->
+      <!-- Навигация + Play/Pause -->
       <div class="controls flex items-center gap-2">
         <SkipButton direction="prev" @click="prevTrack">
           <svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
             <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
           </svg>
         </SkipButton>
+
         <PlayPauseButton :is-playing="isPlaying" @toggle="togglePlay" />
+
         <SkipButton direction="next" @click="nextTrack">
           <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24">
             <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
@@ -29,7 +30,7 @@
         </SkipButton>
       </div>
 
-      <!-- Инфо о треке -->
+      <!-- Информация о треке -->
       <TrackInfo
         class="track-info flex-1 px-4"
         :cover="props.cover"
@@ -47,6 +48,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
@@ -146,20 +148,24 @@ onBeforeUnmount(() => {
 })
 </script>
 
+
 <style scoped>
 .audio-player {
   width: 100%;
 }
 
+/* нижняя панель плеера */
 .bottom-bar {
-  background-color: var(--tg-theme-bottom-bar-bg-color);
+  background: var(--bg-header);   /* универсальное для хедеров/футеров */
+  color: var(--text);
+  border-top: 1px solid var(--border);
 }
 
 .controls {
-  /* можно добавить gap через переменную, оставим компоновку */
+  /* при необходимости можно задать gap через var(); пока достаточно Tailwind-classes */
 }
 
 .track-info {
-  /* отступы заданы через классы */
+  /* padding заданы классами px-4 */
 }
 </style>

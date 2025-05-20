@@ -45,5 +45,11 @@ function toggleTag(tag_id: number) {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+
+  /* пример: фон секции */
+  background: var(--bg-section);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
+
 </style>

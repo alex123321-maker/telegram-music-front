@@ -23,8 +23,8 @@ function onClick() {
 .skip-button {
   padding: 0.5rem;
   border-radius: 9999px;
-  background-color: transparent;
-  color: var(--tg-theme-text-color);
+  background: transparent;
+  color: var(--text);
   transition: background-color 0.3s ease, color 0.3s ease;
   display: inline-flex;
   align-items: center;
@@ -32,10 +32,10 @@ function onClick() {
 }
 
 .skip-button:not(:disabled):hover {
-  background-color: var(--tg-theme-secondary-bg-color);
+  background: var(--bg-secondary);
 }
 
 .skip-button:disabled {
-  color: var(--tg-theme-hint-color);
+  color: var(--text-muted);
 }
 </style>

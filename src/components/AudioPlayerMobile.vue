@@ -1,4 +1,3 @@
-<!-- src/components/AudioPlayerMobile.vue -->
 <template>
   <div class="audio-player-mobile">
     <!-- Панель тегов -->
@@ -16,7 +15,7 @@
     <div class="mobile-bar flex items-center py-2">
       <SkipButton direction="prev" @click="prevTrack">
         <svg class="w-5 h-5 -scale-x-100 fill-current" viewBox="-2 0 24 24">
-          <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
+          <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z" />
         </svg>
       </SkipButton>
 
@@ -24,7 +23,7 @@
 
       <SkipButton direction="next" @click="nextTrack">
         <svg class="w-5 h-5 fill-current" viewBox="-2 0 24 24">
-          <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z"/>
+          <path d="M5 4l7 8-7 8V4zM12 4l7 8-7 8V4z" />
         </svg>
       </SkipButton>
 
@@ -45,6 +44,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
@@ -164,18 +164,18 @@ onBeforeUnmount(() => {
 <style scoped>
 .audio-player-mobile {
   position: fixed;
-  bottom: 0;
-  left: 0;
+  inset: auto 0 0 0;           /* bottom:0; left:0; right:0 */
   width: 100%;
   touch-action: none;
-  /* Фон панели */
-  background-color: var(--tg-theme-bottom-bar-bg-color);
+
+  background: var(--bg-header); /* общий бар-фон темы */
+  color:      var(--text);
+  border-top: 1px solid var(--border);
 }
 
 .mobile-bar {
   display: flex;
   align-items: center;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: .5rem 0;
 }
 </style>

@@ -156,13 +156,15 @@ function selectVideo(item: VideoItem) {
   align-items: center;
 }
 
+/* Заголовок */
 .title {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: var(--tg-theme-accent-text-color);
+  color: var(--text-accent);
 }
 
+/* Обёртка для инпута и кнопки */
 .input-wrapper {
   position: relative;
   width: 100%;
@@ -170,20 +172,29 @@ function selectVideo(item: VideoItem) {
   margin-bottom: 1rem;
 }
 
+/* Поле ввода */
 .input-field {
   width: 100%;
   padding: 0.5rem 2.5rem 0.5rem 1rem;
   border-radius: 0.5rem;
-  background-color: var(--tg-theme-header-bg-color);
-  color: var(--tg-theme-text-color);
-  border: none;
+  background: var(--bg-header);
+  color: var(--text);
+  border: 1px solid var(--border);
   outline: none;
+  transition: box-shadow 0.2s ease;
 }
 .input-field:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+.input-field:focus {
+  box-shadow: 0 0 0 2px var(--btn-bg);
+}
 
+/* Кнопка-иконка */
 .icon-button {
   position: absolute;
   top: 50%;
@@ -192,20 +203,23 @@ function selectVideo(item: VideoItem) {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--tg-theme-section-header-text-color);
+  color: var(--text-link);
+  transition: color 0.2s ease;
 }
 .icon-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
+/* SVG-иконка */
 .icon {
   width: 1.25rem;
   height: 1.25rem;
 }
 
+/* Сообщение об ошибке */
 .error-msg {
   margin-top: 0.5rem;
-  color: var(--tg-theme-destructive-text-color);
+  color: var(--text-destructive);
 }
 </style>

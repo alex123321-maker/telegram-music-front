@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 const props = defineProps<{ isPlaying: boolean }>()
-// Определяем emit через сигнатуру, а не через массив
 const emit = defineEmits<{
   (e: 'toggle'): void
 }>()
@@ -41,17 +40,27 @@ const emit = defineEmits<{
   align-items: center;
   justify-content: center;
 
-  background-color: var(--tg-theme-secondary-bg-color);
-  color:           var(--tg-theme-text-color);
+  /* основной фон и цвет текста из темы */
+  background: var(--btn-bg);
+  color: var(--btn-text);
 
-  transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
-  transform:  scale(1);
+  /* анимация состояний */
+  transition: transform 0.2s ease,
+              background-color 0.3s ease,
+              color 0.3s ease;
+}
+
+.play-pause-button:hover {
+  background: var(--btn-bg-hover);
+}
+
+.play-pause-button:active {
+  background: var(--btn-bg-active);
 }
 
 .play-pause-button.playing {
-  background-color: var(--tg-theme-button-color);
-  color:            var(--tg-theme-button-text-color);
-  transform:        scale(1.1);
+  transform: scale(1.1);
+  background: var(--btn-bg-active);
 }
 
 .icon {

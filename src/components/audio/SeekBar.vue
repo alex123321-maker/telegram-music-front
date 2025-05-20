@@ -1,7 +1,7 @@
 <template>
   <div
     ref="bar"
-    class="seek-bar h-2 cursor-pointer relative shadow-md bg-track"
+    class="seek-bar h-2 cursor-pointer relative bg-track"
     @mousedown.prevent="startDrag"
     @touchstart.prevent="startDrag"
   >
@@ -106,22 +106,21 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .seek-bar {
-  /* Радиус скругления можно настроить по вкусу */
   border-radius: 0.25rem;
 }
 
-/* Цвет фона бара */
+/* Цвет фона всей полосы */
 .bg-track {
-  background-color: var(--tg-theme-secondary-bg-color);
+  background: var(--bg-secondary);
 }
 
 /* Цвет заполненной части */
 .bg-fill {
-  background-color: var(--tg-theme-button-color);
+  background: var(--btn-bg);
 }
 
-/* Попап с текстом времени */
+/* Текст попапа времени */
 .seek-popup {
-  color: var(--tg-theme-text-color);
+  color: var(--text);
 }
 </style>

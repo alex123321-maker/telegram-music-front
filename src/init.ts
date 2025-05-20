@@ -6,6 +6,8 @@ import {
     initData,
     $debug,
     init as initSDK,
+    settingsButton,
+    swipeBehavior,
 } from '@telegram-apps/sdk-vue';
 
 /**
@@ -30,10 +32,23 @@ export function init(debug: boolean): void {
     if (!backButton.isSupported() || !miniApp.isSupported()) {
         throw new Error('ERR_NOT_SUPPORTED');
     }
+if (viewport.mount.isAvailable()) {
+  viewport.mount();}
+    if (viewport.expand.isAvailable()) {
+      viewport.expand();
+}
 
     backButton.mount();
     miniApp.mount();
     themeParams.mount();
+    if (settingsButton.mount.isAvailable()) {
+      settingsButton.mount();
+      settingsButton.show();
+    }
+    if (swipeBehavior.disableVertical.isAvailable()) {
+      swipeBehavior.disableVertical();
+      swipeBehavior.isVerticalEnabled(); // false
+}
     initData.restore();
     void viewport
         .mount()

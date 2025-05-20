@@ -1,4 +1,3 @@
-<!-- src/components/audio/TrackInfo.vue -->
 <template>
   <div class="track-info flex items-center space-x-4 overflow-hidden">
     <img
@@ -26,11 +25,13 @@ defineProps<{
 </script>
 
 <style scoped>
-.track-info .title {
-  color: var(--tg-theme-text-color);
+.track-info {
+  color: var(--text);
 }
-
+.track-info .title {
+  color: var(--text);
+}
 .track-info .artist {
-  color: var(--tg-theme-subtitle-text-color);
+  color: var(--text-muted);
 }
 </style>

@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
 const sliderBg = computed(() => {
   const pct = props.isMuted ? 0 : props.volume * 100
   return {
-    background: `linear-gradient(to right, var(--tg-theme-button-color) ${pct}%, var(--tg-theme-secondary-bg-color) ${pct}%)`
+    background: `linear-gradient(to right, var(--btn-bg) ${pct}%, var(--bg-secondary) ${pct}%)`
   }
 })
 
@@ -141,9 +141,13 @@ function onInput(e: Event) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--tg-theme-secondary-bg-color);
-  color: var(--tg-theme-text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  background: var(--bg-secondary);
+  color:      var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.vc-button:not(.muted):hover {
+  background: var(--bg-section);
 }
 .vc-button.muted {
   opacity: 0.6;
@@ -158,20 +162,21 @@ function onInput(e: Event) {
   cursor: pointer;
 }
 
+/* thumb */
 .vc-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background: var(--tg-theme-button-color);
-  border: 1px solid var(--tg-theme-section-separator-color);
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
 }
 .vc-slider::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background: var(--tg-theme-button-color);
-  border: 1px solid var(--tg-theme-section-separator-color);
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
 }
 
 .icon {

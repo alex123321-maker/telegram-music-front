@@ -1,6 +1,6 @@
 <!-- src/components/MainContent.vue -->
 <template>
-  <div class="main-content flex flex-col min-h-screen" :style="containerStyle">
+  <div class="main-content">
     <!-- Центрированный прокси -->
     <div class="flex-1 flex items-center justify-center">
       <YoutubeProxy
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import YoutubeProxy        from '@/components/YoutubeProxy.vue'
 import AudioPlayer         from '@/components/AudioPlayer.vue'
 import AudioPlayerSkeleton from '@/components/AudioPlayerSkeleton.vue'
@@ -36,11 +36,6 @@ const isLoading = ref(false)
 function onResolved(payload: typeof audio.value) {
   audio.value = payload
 }
-
-const containerStyle = computed(() => ({
-  backgroundColor: 'var(--tg--theme-bg-color)',
-  color:           'var(--tg-theme-text-color)'
-}))
 </script>
 
 <style scoped>
@@ -48,5 +43,9 @@ const containerStyle = computed(() => ({
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  /* глобальные переменные темы */
+  background: var(--bg);
+  color:      var(--text);
 }
 </style>

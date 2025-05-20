@@ -19,9 +19,13 @@ defineProps<{ title?: string }>()
   margin-bottom: 1rem;
 }
 
-.section-title,
+.section-title {
+  /* Заголовок раздела */
+  color: var(--text);
+}
+
 .section-content {
-  /* Цвет текста из темы Telegram Mini App */
-  color: var(--tg-theme-text-color);
+  /* Контент раздела */
+  color: var(--text);
 }
 </style>

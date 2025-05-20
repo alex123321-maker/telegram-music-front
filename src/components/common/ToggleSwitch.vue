@@ -25,35 +25,27 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps<{
-  modelValue: boolean
-  offLabel?: string
-  onLabel?: string
-}>()
-const emit = defineEmits<{
-  (e: 'update:modelValue', v: boolean): void
-}>()
+const props = defineProps<{ modelValue: boolean; offLabel?: string; onLabel?: string }>()
+const emit = defineEmits<{ (e: 'update:modelValue', v: boolean): void }>()
 
 const offLabel = props.offLabel ?? 'Хоть один'
 const onLabel  = props.onLabel  ?? 'Все'
 
-// Цвет темы для underline и текста
-const btnColor      = 'var(--tg-theme-button-color)'
-const btnTextColor  = 'var(--tg-theme-button-text-color)'
-const subtitleColor = 'var(--tg-theme-subtitle-text-color)'
-
-// Подчёркивание всегда активного цвета
-const underlineActiveColor = btnColor
+// Текстовые цвета
+const tconst = 'var(--text)'
+const tconstMuted = 'var(--text-muted)'
+// Цвет подчёркивания
+const underlineColor = 'var(--btn-bg)'
 
 function segStyle(active: boolean) {
   return {
-    backgroundColor: 'transparent',
-    color: active ? btnTextColor : subtitleColor,
+    background: 'transparent',
+    color: active ? tconst : tconstMuted,
   }
 }
 
 const underlineStyle = computed(() => ({
-  backgroundColor: underlineActiveColor,
+  background: underlineColor,
   transform: `translateX(${props.modelValue ? 100 : 0}%)`,
 }))
 </script>
@@ -63,7 +55,7 @@ const underlineStyle = computed(() => ({
   position: relative;
   display: flex;
   width: 100%;
-  border-bottom: 2px solid var(--tg-theme-header-bg-color);
+  border-bottom: 2px solid var(--border);
 }
 
 .seg-btn {
@@ -91,7 +83,7 @@ const underlineStyle = computed(() => ({
   width: 50%;
   height: 3px;
   border-radius: 2px 2px 0 0;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
   z-index: 0;
 }
 </style>

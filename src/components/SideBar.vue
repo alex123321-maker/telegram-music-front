@@ -12,21 +12,20 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import SideBarMobile from '@/components/SideBarMobile.vue'
-import SideBarDesktop from '@/components/SideBarDesktop.vue'
+import SideBarMobile   from '@/components/SideBarMobile.vue'
+import SideBarDesktop  from '@/components/SideBarDesktop.vue'
 
-const isOpen = ref(false)
+const isOpen   = ref(false)
 const isMobile = ref(false)
+
 const emit = defineEmits<{
   (e: 'toggle', val: boolean): void
 }>()
 
-// Определяем текущий breakpoint
 function updateIsMobile() {
   isMobile.value = window.innerWidth < 768
 }
 
-// Пробрасываем событие наружу
 function onToggle(val: boolean) {
   isOpen.value = val
   emit('toggle', val)
@@ -44,9 +43,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .sidebar-wrapper {
-  min-height: 100vh;
-  padding-bottom: 3.5rem; /* соответствует pb-14 */
-  background-color: var(--tg-theme-section-bg-color);
-  border-right: 1px solid var(--tg-theme-section-separator-color);
+  min-height: 100dvh;
+  padding-bottom: 3.5rem;          /* pb-14 */
+  background: var(--bg-section);   /* ← из темы */
+  color: var(--text);              /* текст внутри, если будет */
+  border-right: 1px solid var(--border);
 }
 </style>

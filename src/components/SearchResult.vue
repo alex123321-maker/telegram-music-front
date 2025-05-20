@@ -1,6 +1,9 @@
 <template>
-  <ul
-    v-show="videos.length || loading"
+  <div
+  v-show="videos.length || loading"
+
+  class="list-wrapper">
+    <ul
     class="video-list"
     @scroll.passive="handleScroll"
     ref="listRef"
@@ -29,7 +32,7 @@
           :alt="item.snippet.title"
           class="video-thumb"
         />
-        <div class="video-info h-full">
+        <div class="video-info">
           <p class="video-title">{{ item.snippet.title }}</p>
           <p class="video-channel">{{ item.snippet.channelTitle }}</p>
         </div>
@@ -45,6 +48,7 @@
       </div>
     </li>
   </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -78,40 +82,65 @@ function handleScroll() {
   if (!el) return
 
   const threshold = 100 // пикселей до низа
-  const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - threshold
-
-  if (nearBottom) {
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight - threshold) {
     emit('scroll-bottom')
   }
 }
 </script>
 
 <style scoped>
+.list-wrapper{
+  padding: 1rem 0rem 1rem 1rem;
+  background: var(--bg-section);
+  width: 100%;
+  isplay: flex;
+  max-width: 36rem;
+  border-radius: 0.5rem;
+
+
+}
 .video-list {
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-width: 36rem;
   width: 100%;
-  padding: 1rem;
-  border-radius: 10px;
-  background-color: var(--tg-theme-section-bg-color);
-  scrollbar-width: thin; /* auto | thin | none */
-  scrollbar-color: var(--tg-theme-button-color) var(--tg-theme-bg-color);
+  max-width: 36rem;
+  padding-left: 1rem;
+  border-radius: 0.5rem;
   max-height: 400px;
   overflow-y: auto;
+
+  /* Скроллбар */
+  scrollbar-width: thin;
+  scrollbar-color: var(--btn-bg) var(--bg-section);
+
 }
+.video-list::-webkit-scrollbar {
+  width: 8px;
+}
+.video-list::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+.video-list::-webkit-scrollbar-thumb {
+  background-color: var(--btn-bg);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.video-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-link);
+}
+
 .skeleton-item {
   display: flex;
-  align-items: start;
   gap: 0.75rem;
+  align-items: center;
 }
 .skeleton-thumb {
   width: 6rem;
   height: 4rem;
   border-radius: 0.5rem;
-  background-color: var(--tg-theme-section-separator-color);
+  background: var(--border);
   animation: pulse 1.5s infinite;
 }
 .skeleton-text {
@@ -119,46 +148,46 @@ function handleScroll() {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding-top: 0.25rem;
 }
 .skeleton-line {
-  height: 1rem;
+  background: var(--border);
   border-radius: 0.25rem;
-  background-color: var(--tg-theme-section-separator-color);
   animation: pulse 1.5s infinite;
 }
-.skeleton-line.full { width: 100%; }
-.skeleton-line.half { width: 50%; }
+.skeleton-line.full { width: 100%; height: 1rem; }
+.skeleton-line.half { width: 50%; height: 1rem; }
 
 .video-item {
   display: flex;
-  align-items: start;
   gap: 0.75rem;
-  cursor: pointer;
-  padding: 0.25rem;
+  align-items: center;
+  padding: 0.5rem;
+  margin-right: 1rem;
   border-radius: 0.5rem;
-  background-color: var(--tg-theme-secondary-background-color);
-  border-bottom:1px solid var(--tg-theme-section-separator-color);
-
-  transition: background-color 0.2s;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s ease;
 }
+.video-item:hover {
+  background: var(--bg);
+}
+
 .video-thumb {
   width: 6rem;
   height: 4rem;
   border-radius: 0.5rem;
   object-fit: cover;
-  border-bottom:1px solid var(--tg-theme-section-separator-color);
-  box-shadow: 0 1px 3px var(--tg-theme-section-separator-color);
+  box-shadow: var(--shadow);
 }
+
 .video-info {
   flex: 1;
   overflow: hidden;
-
 }
 .video-title {
   margin: 0;
   font-weight: 500;
-  color: var(--tg-theme-text-color);
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -166,32 +195,15 @@ function handleScroll() {
 .video-channel {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--tg-theme-hint-color);
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.video-list::-webkit-scrollbar {
-  width: 8px;
-}
 
-.video-list::-webkit-scrollbar-track {
-  background: var(--tg-theme-bg-color, transparent); /* фон канала скролла */
-}
-
-.video-list::-webkit-scrollbar-thumb {
-  background-color: var(--tg-theme-button-color); /* цвет самого скроллбара */
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.video-list::-webkit-scrollbar-thumb:hover {
-  background-color: var(--tg-theme-link-color);
-}
-
+/* Анимация пульса */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50%      { opacity: 0.4; }
 }
 </style>

@@ -1,6 +1,5 @@
-<!-- src/components/audio/MediaTagBar.vue -->
 <template>
-  <div class="media-tag-bar flex gap-2 flex-wrap items-center px-2 pb-1">
+  <div class="media-tag-bar">
     <TagButton
       v-for="tag in tags"
       :key="tag.tagID"
@@ -34,7 +33,14 @@ onMounted(async () => {
 
 <style scoped>
 .media-tag-bar {
-  /* фон из темы Telegram Mini App */
-  background-color: var(--tg-theme-background-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;               /* соответствует flex gap-2 */
+  align-items: center;
+  padding: 0.25rem 0.5rem 0; /* px-2 pb-1 */
+
+  background: var(--bg);     /* основной фон */
+  color: var(--text);        /* цвет текста кнопок, если потребуется */
+  border-bottom: 1px solid var(--border); /* тонкая граница снизу */
 }
 </style>
