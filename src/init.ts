@@ -4,10 +4,8 @@ import {
   backButton,
   miniApp,
   themeParams,
-  viewport,
   initData,
   settingsButton,
-  swipeBehavior,
 } from '@telegram-apps/sdk-vue';
 
 

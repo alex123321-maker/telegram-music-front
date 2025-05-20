@@ -22,7 +22,9 @@ import MainContent from '@/components/MainContent.vue'
 
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import {
+  offSettingsButtonClick,
   onSettingsButtonClick,
+  settingsButton,
 } from '@telegram-apps/sdk'
 
 import SettingsModal from '@/components/SettingsModal.vue'
@@ -30,28 +32,25 @@ import SettingsModal from '@/components/SettingsModal.vue'
 /* состояние окна настроек */
 const isSettingsOpen = ref(false)
 function openSettings() {
-  console.log("OPEN SETTINGS")
   isSettingsOpen.value = true
 }
 
-/* ——— подписка на кнопку Telegram ——— */
-let detach: (() => void) | null = null
 
 onMounted(() => {
-  if (onSettingsButtonClick.isAvailable()) {
-    // вариант 1: сохранить возвращённую функцию-«отписку»
-    detach = onSettingsButtonClick(openSettings)
+  /* показываем кнопку */
+  if (settingsButton.show.isAvailable()) settingsButton.show()
 
-    /* — либо вариант 2 —
-       onSettingsButtonClick(openSettings)          // подписались
-       //и всё; отписка будет через offSettingsButtonClick ниже */
+  /* подписываемся на клик */
+  if (onSettingsButtonClick.isAvailable()) {
+    onSettingsButtonClick(openSettings)
   }
 })
 
 onBeforeUnmount(() => {
-  detach?.()
-  isSettingsOpen.value = false
-
+  /* снимаем обработчик при размонтировании */
+  if (offSettingsButtonClick.isAvailable()) {
+    offSettingsButtonClick(openSettings)
+  }
 })
 
 
