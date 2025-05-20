@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex box-border h-dvh"
-    :style="{ background: themeParams.backgroundColor(), color: themeParams.textColor() }"
+    :style="safeAreaSidebarStyle"
   >
     <Sidebar @toggle="isSidebarOpen = $event" />
 
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { themeParams,useSignal,viewport } from '@telegram-apps/sdk-vue'
+import { useSignal,viewport } from '@telegram-apps/sdk-vue'
 import Sidebar     from '@/components/SideBar.vue'
 import MainContent from '@/components/MainContent.vue'
 
@@ -29,7 +29,7 @@ import {
 import SettingsModal from '@/components/SettingsModal.vue'
 
 /* состояние окна настроек */
-const isSettingsOpen = ref(true)
+const isSettingsOpen = ref(false)
 function openSettings() {
   isSettingsOpen.value = true
 }
@@ -58,7 +58,11 @@ const insets = useSignal(viewport.safeAreaInsets)
 
 const safeAreaStyle = computed(() => {
   const { top, right, bottom, left } = insets.value
-  return { padding: `${bottom}px ${left}px ${right}px ${top}px` }
+  return { padding: `${top}px ${bottom}px ${right}px ${left}px` }
+})
+const safeAreaSidebarStyle = computed(() => {
+  const { top, right, bottom, left } = insets.value
+  return { padding: `${top}px $0px $0px $0px` }
 })
 
 
