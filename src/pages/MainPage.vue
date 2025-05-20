@@ -1,12 +1,15 @@
 <template>
   <div
     class="flex box-border h-dvh"
-    :style="safeAreaSidebarStyle"
+    style="padding-top: var(--tg-viewport-content-safe-area-inset-top);"
+
   >
     <Sidebar @toggle="isSidebarOpen = $event" />
 
     <main
-    :style="safeAreaStyle"
+    style="padding-top: var(--tg-viewport-content-safe-area-inset-top);
+    padding-bottom: var(--tg-viewport-content-safe-area-inset-bottom);
+    "
       class="flex-1 h-full transition-all duration-300 relative overflow-hidden"
     >
       <MainContent />
@@ -17,11 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { useSignal,viewport } from '@telegram-apps/sdk-vue'
 import Sidebar     from '@/components/SideBar.vue'
 import MainContent from '@/components/MainContent.vue'
 
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 import {
   onSettingsButtonClick,
 } from '@telegram-apps/sdk'
@@ -54,16 +56,7 @@ onBeforeUnmount(() => {
 
 })
 
-const insets = useSignal(viewport.safeAreaInsets)
 
-const safeAreaStyle = computed(() => {
-  const { top, right, bottom, left } = insets.value
-  return { padding: `${top}px ${right}px ${bottom}px ${left}px` }
-})
-const safeAreaSidebarStyle = computed(() => {
-  const { top, right, bottom, left } = insets.value
-  return { padding: `${top}px $0px $0px $0px` }
-})
 
 
 const isSidebarOpen = ref(false)

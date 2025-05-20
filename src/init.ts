@@ -33,8 +33,6 @@ export async function init(debug = false): Promise<void> {
   if (miniApp.mount.isAvailable())     miniApp.mount();
   if (backButton.mount.isAvailable())  backButton.mount();
 
-  /* 4. Показываем Settings-кнопку, если можно */
-  if (settingsButton.show.isAvailable()) settingsButton.show();
 
   /* 5. Отключаем вертикальный свайп (если доступно) */
   swipeBehavior.disableVertical.ifAvailable?.();
